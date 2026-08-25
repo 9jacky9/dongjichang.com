@@ -1,0 +1,60 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import RatingBadge from '../../components/RatingBadge.astro';
+
+const allReviews = await getCollection('reviews');
+const sortedReviews = allReviews.sort((a, b) => b.data.rating.overall - a.data.rating.overall);
+---
+
+<BaseLayout 
+  title="品牌库" 
+  description="收录市面上主流优质代理服务商，提供客观中立的深度评测。"
+>
+  <div class="bg-[var(--card-bg)] border-b border-[var(--border-color)]">
+    <div class="container mx-auto px-4 py-16 text-center max-w-3xl">
+      <h1 class="text-4xl font-bold mb-4 text-[var(--text-color)]">机场品牌库</h1>
+      <p class="text-lg text-[var(--text-color)]/70">
+        我们目前收录了 {allReviews.length} 家精选品牌，所有评测均基于真实购买与长期测速。
+      </p>
+    </div>
+  </div>
+
+  <div class="container mx-auto px-4 py-16 max-w-6xl">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      {sortedReviews.map(review => (
+        <a href={`/reviews/${review.id}`} class="group flex flex-col bg-[var(--card-bg)] border border-[var(--border-color)] rounded-2xl overflow-hidden hover:border-primary-500 hover:shadow-xl hover:shadow-primary-500/5 transition-all">
+          <div class="p-6">
+            <div class="flex justify-between items-start mb-6">
+              <div class="flex items-center gap-4">
+                <div class="w-14 h-14 rounded-xl overflow-hidden bg-[var(--bg-color)] border border-[var(--border-color)] p-1 shrink-0">
+                  <img src={`/src/assets/brands/${review.id}.svg`} alt={`${review.data.name} Logo`} class="w-full h-full object-cover rounded-lg" />
+                </div>
+                <div>
+                  <h3 class="text-xl font-bold text-[var(--text-color)] group-hover:text-primary-500 transition-colors mb-1">{review.data.name}</h3>
+                  <div class="text-xs text-[var(--text-color)]/60 bg-[var(--bg-color)] px-2 py-1 rounded inline-block">
+                    {review.data.pricing?.[0]?.price || '未知'}/起
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="mb-6">
+              <RatingBadge score={review.data.rating.overall} size="md" label="综合评分" />
+            </div>
+            
+            <p class="text-sm text-[var(--text-color)]/70 line-clamp-2 mb-6">{review.data.summary}</p>
+            
+            <div class="flex flex-wrap gap-2">
+              {review.data.targetAudience.slice(0, 3).map((tag: string) => (
+                <span class="text-xs px-2.5 py-1 bg-[var(--bg-color)] text-[var(--text-color)]/70 rounded-full border border-[var(--border-color)]">
+                  {tag}
+                </span>
+              ))}
+            </div>
+          </div>
+        </a>
+      ))}
+    </div>
+  </div>
+</BaseLayout>

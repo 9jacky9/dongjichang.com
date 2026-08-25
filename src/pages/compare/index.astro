@@ -1,0 +1,48 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import CompareTable from '../../components/CompareTable.astro';
+import FAQAccordion from '../../components/FAQAccordion.astro';
+
+const allReviews = await getCollection('reviews');
+
+// Format for CompareTable
+const compareBrands = allReviews.map(review => ({
+  name: review.data.name,
+  score: review.data.rating.overall,
+  price: review.data.pricing?.[0]?.price || '暂无数据',
+  protocol: 'Shadowsocks / V2Ray / Trojan', // Placeholder as not in schema yet
+  link: review.data.affiliateLink
+})).sort((a, b) => b.score - a.score);
+
+const compareFaqs = [
+  { question: "横向对比的评分依据是什么？", answer: "我们的评分主要分为四个维度：速度（30%）、稳定性（30%）、性价比（20%）和售后服务（20%）。每一项得分均通过长达数周的实际测试和工单响应测试得出。" },
+  { question: "起步价格包含哪些服务？", answer: "通常指该服务商最基础的月付套餐。需要注意，最低价套餐可能存在设备数限制或流量较少的情况，具体详见深度评测内的套餐解析表。" }
+];
+---
+
+<BaseLayout 
+  title="全网机场横向对比" 
+  description="多维度对比各大机场代理服务，直观展现评分、价格与线路协议。"
+>
+  <div class="bg-[var(--card-bg)] border-b border-[var(--border-color)]">
+    <div class="container mx-auto px-4 py-16 text-center max-w-3xl">
+      <h1 class="text-4xl font-bold mb-4 text-[var(--text-color)]">云速横评：多维对比表</h1>
+      <p class="text-lg text-[var(--text-color)]/70">
+        不看广告看疗效。通过直观的数据对比，快速找到满足您核心诉求的云端方案。
+      </p>
+    </div>
+  </div>
+
+  <div class="container mx-auto px-4 py-16 max-w-6xl">
+    <div class="mb-20">
+      <div class="bg-[var(--card-bg)] border border-[var(--border-color)] rounded-2xl p-2 md:p-6 overflow-hidden shadow-sm">
+        <CompareTable brands={compareBrands} />
+      </div>
+    </div>
+    
+    <div class="max-w-3xl mx-auto">
+      <FAQAccordion faqs={compareFaqs} />
+    </div>
+  </div>
+</BaseLayout>

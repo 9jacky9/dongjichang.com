@@ -1,0 +1,77 @@
+---
+interface Brand {
+  name: string;
+  score: number;
+  price: string;
+  protocol: string;
+  link: string;
+}
+
+interface Props {
+  brands: Brand[];
+}
+
+const { brands } = Astro.props;
+---
+
+<div class="my-8 overflow-x-auto pb-4 custom-scrollbar">
+  <table class="w-full min-w-[600px] border-collapse">
+    <thead>
+      <tr class="bg-[var(--bg-color)] border-y border-[var(--border-color)]">
+        <th class="py-4 px-6 text-left text-sm font-semibold text-[var(--text-color)]/70">品牌</th>
+        <th class="py-4 px-6 text-left text-sm font-semibold text-[var(--text-color)]/70">综合评分</th>
+        <th class="py-4 px-6 text-left text-sm font-semibold text-[var(--text-color)]/70">起步价格</th>
+        <th class="py-4 px-6 text-left text-sm font-semibold text-[var(--text-color)]/70">主流协议</th>
+        <th class="py-4 px-6 text-right text-sm font-semibold text-[var(--text-color)]/70">操作</th>
+      </tr>
+    </thead>
+    <tbody class="divide-y divide-[var(--border-color)]">
+      {brands.map(brand => (
+        <tr class="hover:bg-[var(--bg-color)]/50 transition-colors group bg-[var(--card-bg)]">
+          <td class="py-4 px-6">
+            <span class="font-bold text-[var(--text-color)]">{brand.name}</span>
+          </td>
+          <td class="py-4 px-6">
+            <div class="flex items-center gap-1 font-medium text-warning">
+              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+              {brand.score.toFixed(1)}
+            </div>
+          </td>
+          <td class="py-4 px-6">
+            <span class="font-mono text-[var(--text-color)]">{brand.price}</span>
+          </td>
+          <td class="py-4 px-6 text-sm text-[var(--text-color)]/80">
+            {brand.protocol}
+          </td>
+          <td class="py-4 px-6 text-right">
+            <a 
+              href={brand.link} 
+              target="_blank"
+              rel="nofollow sponsored"
+              class="inline-block px-4 py-2 bg-primary-50 hover:bg-primary-500 text-primary-600 hover:text-white dark:bg-primary-900/30 dark:hover:bg-primary-500 text-sm font-medium rounded-md transition-colors"
+            >
+              前往官网
+            </a>
+          </td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+</div>
+
+<style>
+  .custom-scrollbar::-webkit-scrollbar {
+    height: 6px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: var(--bg-color);
+    border-radius: 4px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: var(--border-color);
+    border-radius: 4px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: var(--color-cloud-800);
+  }
+</style>

@@ -1,0 +1,93 @@
+---
+// Header.astro
+const navItems = [
+  { label: '评测榜单', href: '/best' },
+  { label: '机场库', href: '/brands' },
+  { label: '横向对比', href: '/compare' },
+  { label: '教程指南', href: '/blog' },
+  { label: '问题库', href: '/faq' },
+];
+---
+
+<header class="sticky top-0 z-50 w-full cyber-glass">
+  <div class="container mx-auto px-4 h-16 flex items-center justify-between">
+    <a href="/" class="flex items-center gap-2 group">
+      <div class="flex flex-col">
+        <div class="flex items-center gap-1">
+          <div class="w-8 h-8 flex-shrink-0 group-hover:opacity-90 transition-opacity shadow-sm rounded-lg overflow-hidden">
+            <svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" class="w-full h-full">
+              <rect width="40" height="40" rx="10" fill="#6366f1"/>
+              <path d="M9 21L31 9L21 31L18 22L9 21Z" fill="#fff"/>
+              <circle cx="30" cy="30" r="7" fill="#fff" stroke="#6366f1" stroke-width="1.5"/>
+              <path d="M27 30l2 2 4-4" stroke="#6366f1" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <span class="font-bold text-2xl tracking-tight text-[var(--text-color)] ml-1">
+            懂机场
+          </span>
+        </div>
+        <span class="text-[10px] text-[var(--text-color)]/40 font-medium leading-none mt-1 tracking-widest pl-1">
+          dongjichang.com
+        </span>
+      </div>
+    </a>
+
+    <nav class="hidden md:flex items-center gap-6">
+      {navItems.map(item => (
+        <a href={item.href} class="text-sm font-medium text-[var(--text-color)]/80 hover:text-primary-500 transition-colors">
+          {item.label}
+        </a>
+      ))}
+    </nav>
+
+    <div class="flex items-center gap-4">
+      <button id="theme-toggle" type="button" class="text-[var(--text-color)]/80 hover:text-primary-500 rounded-lg text-sm p-2.5" aria-label="Toggle Dark Mode">
+        <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+        <svg id="theme-toggle-light-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+      </button>
+      
+      <!-- Mobile menu button -->
+      <button class="md:hidden text-[var(--text-color)]/80 p-2">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<script>
+  // Theme toggle logic
+  const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
+  const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
+
+  if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      themeToggleLightIcon?.classList.remove('hidden');
+      document.documentElement.classList.add('dark');
+  } else {
+      themeToggleDarkIcon?.classList.remove('hidden');
+  }
+
+  const themeToggleBtn = document.getElementById('theme-toggle');
+
+  themeToggleBtn?.addEventListener('click', function() {
+      themeToggleDarkIcon?.classList.toggle('hidden');
+      themeToggleLightIcon?.classList.toggle('hidden');
+
+      if (localStorage.getItem('color-theme')) {
+          if (localStorage.getItem('color-theme') === 'light') {
+              document.documentElement.classList.add('dark');
+              localStorage.setItem('color-theme', 'dark');
+          } else {
+              document.documentElement.classList.remove('dark');
+              localStorage.setItem('color-theme', 'light');
+          }
+      } else {
+          if (document.documentElement.classList.contains('dark')) {
+              document.documentElement.classList.remove('dark');
+              localStorage.setItem('color-theme', 'light');
+          } else {
+              document.documentElement.classList.add('dark');
+              localStorage.setItem('color-theme', 'dark');
+          }
+      }
+  });
+</script>

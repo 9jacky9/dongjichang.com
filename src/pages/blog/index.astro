@@ -1,0 +1,52 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const posts = [
+  {
+    title: "2026年最新：Clash for Windows 汉化与配置教程",
+    desc: "图文并茂，手把手教你在 Windows 平台上配置最流行的代理客户端，包含订阅导入与分流规则设置。",
+    date: "2026-08-20"
+  },
+  {
+    title: "Shadowrocket (小火箭) 完整使用指南与技巧",
+    desc: "iOS 用户必备。包含美区 Apple ID 注册方法、节点订阅导入、以及按需连接的设置技巧。",
+    date: "2026-08-15"
+  },
+  {
+    title: "一文读懂：什么是 IPLC/IEPL 专线？值得买吗？",
+    desc: "深入浅出解析中转线路的底层逻辑，对比普通隧道与物理专线的差异，帮你做出合理的预算规划。",
+    date: "2026-08-10"
+  }
+];
+---
+
+<BaseLayout 
+  title="云速博客：教程与科普" 
+  description="代理客户端配置教程、翻墙科普知识、机场防失联指南。"
+>
+  <div class="bg-[var(--card-bg)] border-b border-[var(--border-color)]">
+    <div class="container mx-auto px-4 py-16 text-center max-w-3xl">
+      <h1 class="text-4xl font-bold mb-4 text-[var(--text-color)]">知识库与教程</h1>
+      <p class="text-lg text-[var(--text-color)]/70">
+        探索客户端配置指南、网络协议科普，让科学上网变得更简单。
+      </p>
+    </div>
+  </div>
+
+  <div class="container mx-auto px-4 py-16 max-w-4xl">
+    <div class="space-y-8">
+      {posts.map(post => (
+        <article class="bg-[var(--card-bg)] border border-[var(--border-color)] p-6 md:p-8 rounded-2xl hover:border-accent-500 hover:shadow-lg transition-all group">
+          <time class="text-sm font-medium text-accent-500 mb-2 block">{post.date}</time>
+          <h2 class="text-2xl font-bold text-[var(--text-color)] mb-3 group-hover:text-accent-600 dark:group-hover:text-accent-400 transition-colors">
+            <a href="#">{post.title}</a>
+          </h2>
+          <p class="text-[var(--text-color)]/70 leading-relaxed mb-6">{post.desc}</p>
+          <a href="#" class="inline-flex items-center text-sm font-medium text-[var(--text-color)] hover:text-accent-500 transition-colors">
+            阅读全文 <svg class="w-4 h-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+          </a>
+        </article>
+      ))}
+    </div>
+  </div>
+</BaseLayout>

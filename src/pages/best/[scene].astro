@@ -1,0 +1,99 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import CompareTable from '../../components/CompareTable.astro';
+import RatingBadge from '../../components/RatingBadge.astro';
+
+export function getStaticPaths() {
+  return [
+    { params: { scene: 'streaming' }, props: { title: '流媒体解锁优选榜单', keyword: '流媒体' } },
+    { params: { scene: 'gaming' }, props: { title: '低延迟游戏专线榜单', keyword: '游戏' } },
+    { params: { scene: 'budget' }, props: { title: '高性价比平价榜单', keyword: '便宜' } },
+  ];
+}
+
+const { title, keyword } = Astro.props;
+
+// Mock logic: Fetch reviews and randomly pick some based on the scene keyword
+const allReviews = await getCollection('reviews');
+// For now, we just sort differently or pick a subset to simulate scene filtering
+const filteredReviews = allReviews.sort((a, b) => b.data.rating.overall - a.data.rating.overall).slice(0, 3);
+
+const compareBrands = filteredReviews.map(review => ({
+  name: review.data.name,
+  score: review.data.rating.overall,
+  price: review.data.pricing?.[0]?.price || '暂无数据',
+  protocol: 'Shadowsocks / V2Ray', 
+  link: review.data.affiliateLink
+}));
+---
+
+<BaseLayout 
+  title={title} 
+  description={`为您推荐最适合${keyword}场景的代理服务商评测榜单。`}
+>
+  <div class="bg-[var(--card-bg)] border-b border-[var(--border-color)]">
+    <div class="container mx-auto px-4 py-16 text-center max-w-3xl">
+      <div class="mb-4 text-sm font-medium text-accent-500">
+        <a href="/best" class="hover:underline">场景推荐</a> &gt; <span>{title}</span>
+      </div>
+      <h1 class="text-4xl font-bold mb-4 text-[var(--text-color)]">{title}</h1>
+      <p class="text-lg text-[var(--text-color)]/70">
+        此榜单下的服务商在 {keyword} 方面的表现极为优异。排名不分先后，根据您的具体需求和预算进行挑选。
+      </p>
+    </div>
+  </div>
+
+  <div class="container mx-auto px-4 py-16 max-w-6xl">
+    
+    <div class="mb-16">
+      <h2 class="text-2xl font-bold mb-8 text-[var(--text-color)] border-l-4 border-accent-500 pl-4">推荐参数对比</h2>
+      <div class="bg-[var(--card-bg)] border border-[var(--border-color)] rounded-2xl p-2 md:p-6 overflow-hidden shadow-sm">
+        <CompareTable brands={compareBrands} />
+      </div>
+    </div>
+
+    <div class="space-y-10">
+      <h2 class="text-2xl font-bold text-[var(--text-color)] border-l-4 border-accent-500 pl-4">详细上榜理由</h2>
+      {filteredReviews.map((review, index) => (
+        <div class="bg-[var(--card-bg)] border border-[var(--border-color)] rounded-2xl p-6 md:p-8 flex flex-col md:flex-row gap-8 items-start">
+          <div class="w-full md:w-1/4 shrink-0 flex flex-col items-center text-center">
+            <div class="w-20 h-20 rounded-2xl overflow-hidden bg-[var(--bg-color)] border border-[var(--border-color)] p-2 mb-4">
+              <img src={`/src/assets/brands/${review.id}.svg`} alt={`${review.data.name} Logo`} class="w-full h-full object-cover rounded-xl" />
+            </div>
+            <h3 class="text-xl font-bold text-[var(--text-color)] mb-2">{review.data.name}</h3>
+            <RatingBadge score={review.data.rating.overall} size="md" />
+            <a href={`/reviews/${review.id}`} class="mt-6 inline-block w-full py-2 bg-[var(--bg-color)] border border-[var(--border-color)] hover:border-accent-500 text-[var(--text-color)] font-medium rounded-lg transition-colors">
+              阅读完整评测
+            </a>
+          </div>
+          <div class="flex-grow">
+            <h4 class="text-lg font-bold text-[var(--text-color)] mb-3">上榜理由</h4>
+            <p class="text-[var(--text-color)]/80 leading-relaxed mb-6">{review.data.summary}</p>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <h5 class="font-medium text-success mb-2 text-sm">优势标签</h5>
+                <ul class="space-y-1">
+                  {review.data.pros.slice(0, 3).map((pro: string) => (
+                    <li class="flex items-start gap-2 text-sm text-[var(--text-color)]/70">
+                      <svg class="w-4 h-4 text-success shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                      {pro}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div class="bg-accent-50 dark:bg-accent-900/20 p-4 rounded-xl border border-accent-100 dark:border-accent-800 flex flex-col justify-center items-center text-center">
+                <span class="text-sm text-[var(--text-color)]/70 mb-1">最低套餐</span>
+                <span class="text-2xl font-bold text-accent-600 dark:text-accent-400 mb-3">{review.data.pricing?.[0]?.price || '未知'}</span>
+                <a href={review.data.affiliateLink} target="_blank" rel="nofollow sponsored" class="inline-block w-full py-2 bg-accent-500 hover:bg-accent-600 text-white font-medium rounded-lg transition-colors">
+                  前往官网
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</BaseLayout>

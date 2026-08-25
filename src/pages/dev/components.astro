@@ -1,0 +1,91 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import RatingBadge from '../../components/RatingBadge.astro';
+import PricingTable from '../../components/PricingTable.astro';
+import CouponCode from '../../components/CouponCode.astro';
+import ProsConsList from '../../components/ProsConsList.astro';
+import CompareTable from '../../components/CompareTable.astro';
+import CTAButton from '../../components/CTAButton.astro';
+import FAQAccordion from '../../components/FAQAccordion.astro';
+import SpeedTestGallery from '../../components/SpeedTestGallery.astro';
+
+// Dummy Data
+const dummyPlans = [
+  { name: '基础套餐', price: '￥15', period: '月付', refundable: false },
+  { name: '标准套餐', price: '￥25', period: '月付', refundable: true },
+  { name: '特惠年付', price: '￥199', period: '年付', isLimited: true, refundable: false },
+];
+
+const dummyBrands = [
+  { name: '飞猫云', score: 4.5, price: '￥15/月', protocol: 'SS/SSR/V2Ray', link: '#' },
+  { name: '星岛梦', score: 4.6, price: '￥12/月', protocol: 'V2Ray/Trojan', link: '#' },
+  { name: '唯兔云', score: 4.5, price: '￥9.9/月', protocol: 'SSR/V2Ray', link: '#' },
+];
+
+const dummyFaqs = [
+  { question: '什么是机场？', answer: '机场是指提供代理服务的平台，因早期的 Shadowsocks 客户端图标像纸飞机，所以被网友戏称为“机场”。' },
+  { question: '支持退款吗？', answer: '不同机场政策不同，请在购买前仔细阅读商家的服务条款（TOS）。' },
+];
+
+const dummyTests = [
+  { region: '广东移动', date: new Date(), conclusion: '速度极快，晚高峰无压力', image: undefined },
+  { region: '北京联通', date: new Date(), conclusion: '稳定无丢包，延迟低', image: undefined },
+  { region: '上海电信', date: new Date(), conclusion: '偶尔波动，整体可用', image: undefined },
+];
+---
+
+<BaseLayout title="组件库预览 (DEV)">
+  <div class="container mx-auto px-4 py-12 max-w-4xl">
+    <h1 class="text-3xl font-bold mb-8 text-[var(--text-color)] border-b pb-4 border-[var(--border-color)]">组件库验收 (Component Library)</h1>
+    
+    <section class="mb-12">
+      <h2 class="text-2xl font-semibold mb-4 text-[var(--text-color)]">1. RatingBadge (评分徽章)</h2>
+      <div class="p-6 bg-[var(--card-bg)] border border-[var(--border-color)] rounded-xl flex flex-wrap gap-8 items-center">
+        <RatingBadge score={4.5} size="lg" label="综合评分" />
+        <RatingBadge score={3.8} size="md" label="稳定性" />
+        <RatingBadge score={5.0} size="sm" label="售后服务" />
+      </div>
+    </section>
+
+    <section class="mb-12">
+      <h2 class="text-2xl font-semibold mb-4 text-[var(--text-color)]">2. CouponCode (优惠码组件)</h2>
+      <CouponCode code="JLY888" desc="全场8折专属优惠码" />
+    </section>
+
+    <section class="mb-12">
+      <h2 class="text-2xl font-semibold mb-4 text-[var(--text-color)]">3. CTAButton (号召性按钮)</h2>
+      <div class="p-6 bg-[var(--card-bg)] border border-[var(--border-color)] rounded-xl flex justify-center">
+        <CTAButton href="#" text="获取专属链接" />
+      </div>
+    </section>
+
+    <section class="mb-12">
+      <h2 class="text-2xl font-semibold mb-4 text-[var(--text-color)]">4. ProsConsList (优缺点双栏)</h2>
+      <ProsConsList 
+        pros={["节点覆盖广泛，流媒体解锁优秀", "晚高峰稳定性好", "提供 85 折专属新人优惠"]}
+        cons={["部分冷门节点速度一般", "96元年付特惠包无法使用优惠码"]}
+      />
+    </section>
+
+    <section class="mb-12">
+      <h2 class="text-2xl font-semibold mb-4 text-[var(--text-color)]">5. FAQAccordion (常见问题手风琴)</h2>
+      <FAQAccordion faqs={dummyFaqs} />
+    </section>
+
+    <section class="mb-12">
+      <h2 class="text-2xl font-semibold mb-4 text-[var(--text-color)]">6. PricingTable (套餐比价表)</h2>
+      <PricingTable plans={dummyPlans} affiliateLink="#" />
+    </section>
+
+    <section class="mb-12">
+      <h2 class="text-2xl font-semibold mb-4 text-[var(--text-color)]">7. CompareTable (多品牌对比表)</h2>
+      <CompareTable brands={dummyBrands} />
+    </section>
+    
+    <section class="mb-12">
+      <h2 class="text-2xl font-semibold mb-4 text-[var(--text-color)]">8. SpeedTestGallery (测速画廊)</h2>
+      <SpeedTestGallery brandName="云速示例" tests={dummyTests} />
+    </section>
+    
+  </div>
+</BaseLayout>

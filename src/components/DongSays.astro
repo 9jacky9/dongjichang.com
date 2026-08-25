@@ -1,0 +1,10 @@
+---
+interface Props {
+  verdict: string;
+}
+const { verdict } = Astro.props;
+---
+<div class="inline-flex items-start gap-2 rounded-lg px-3 py-2 bg-primary-50 dark:bg-primary-900/30 border border-primary-100 dark:border-primary-800/50 mt-4 mb-2">
+  <span class="font-bold text-sm shrink-0 text-primary-600 dark:text-primary-400">懂说</span>
+  <span class="text-sm text-[var(--text-color)]">{verdict}</span>
+</div>

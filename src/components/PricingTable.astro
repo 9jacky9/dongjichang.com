@@ -1,0 +1,71 @@
+---
+interface PricingPlan {
+  name: string;
+  price: string;
+  period: string;
+  isLimited?: boolean;
+  refundable?: boolean;
+}
+
+interface Props {
+  plans: PricingPlan[];
+  affiliateLink: string;
+}
+
+const { plans, affiliateLink } = Astro.props;
+
+// Helper to determine if a plan should be highlighted (e.g. middle plan or specific flag)
+// For now we just highlight the second plan if there are at least 3, or the first one if it's the only one
+const recommendedIndex = plans.length > 2 ? 1 : 0;
+---
+
+<div class="my-8">
+  <h3 class="text-xl font-bold mb-6 text-[var(--text-color)]">套餐价格对比</h3>
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    {plans.map((plan, index) => {
+      const isRecommended = index === recommendedIndex;
+      return (
+        <div class={`relative rounded-2xl border ${isRecommended ? 'border-accent-500 shadow-lg shadow-accent-500/10 bg-accent-50/10 dark:bg-accent-900/10' : 'border-[var(--border-color)] bg-[var(--card-bg)]'} p-6 flex flex-col`}>
+          {isRecommended && (
+            <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-accent-500 text-white text-xs font-bold px-3 py-1 rounded-full">
+              编辑推荐
+            </div>
+          )}
+          {plan.isLimited && (
+            <div class="absolute -top-3 right-4 bg-error text-white text-xs font-bold px-2 py-1 rounded-sm">
+              限时特惠
+            </div>
+          )}
+          <h4 class="text-lg font-semibold text-[var(--text-color)] mb-2">{plan.name}</h4>
+          <div class="flex items-baseline gap-1 mb-4">
+            <span class="text-3xl font-bold text-accent-600 dark:text-accent-400">{plan.price}</span>
+            <span class="text-[var(--text-color)]/60 text-sm">/{plan.period}</span>
+          </div>
+          
+          <ul class="space-y-3 mb-8 flex-grow">
+            <li class="flex items-center gap-2 text-sm text-[var(--text-color)]/80">
+              <svg class="w-4 h-4 text-success" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+              全节点线路接入
+            </li>
+            <li class="flex items-center gap-2 text-sm text-[var(--text-color)]/80">
+              <svg class="w-4 h-4 text-success" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+              流媒体解锁支持
+            </li>
+            <li class="flex items-center gap-2 text-sm text-[var(--text-color)]/80">
+              {plan.refundable ? (
+                <svg class="w-4 h-4 text-success" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+              ) : (
+                <svg class="w-4 h-4 text-error" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+              )}
+              {plan.refundable ? '支持退款' : '不支持退款'}
+            </li>
+          </ul>
+          
+          <a href={affiliateLink} target="_blank" rel="nofollow sponsored" class={`w-full py-2.5 rounded-lg text-center font-medium transition-colors ${isRecommended ? 'bg-accent-500 hover:bg-accent-600 text-white' : 'bg-[var(--bg-color)] hover:bg-[var(--border-color)] text-[var(--text-color)] border border-[var(--border-color)]'}`}>
+            获取套餐
+          </a>
+        </div>
+      );
+    })}
+  </div>
+</div>

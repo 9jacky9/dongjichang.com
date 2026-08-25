@@ -1,0 +1,53 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout 
+  title="关于我们" 
+  description="了解「懂机场」团队的初衷、价值观以及我们的联系方式。"
+>
+  <div class="container mx-auto px-4 py-16 max-w-3xl">
+    <h1 class="text-4xl font-bold mb-8 text-[var(--text-color)] text-center">关于懂机场</h1>
+    
+    <div class="prose dark:prose-invert prose-primary max-w-none">
+      <p class="lead text-xl text-[var(--text-color)]/80 mb-8">
+        在信息爆炸的时代，找到一个稳定、快速、安全的网络出海方案并不容易。这正是我们建立“懂机场”的初衷。
+      </p>
+
+      <h2 class="text-2xl font-bold text-[var(--text-color)] mt-12 mb-4">我们的使命</h2>
+      <p>
+        致力于打破信息差，通过真实、客观、数据驱动的深度横向评测，帮助每一位用户（无论是留学生、外贸从业者、开发者还是流媒体爱好者）找到最契合其需求的代理网络服务。
+      </p>
+
+      <h2 class="text-2xl font-bold text-[var(--text-color)] mt-12 mb-4">我们的价值观</h2>
+      <ul class="space-y-4">
+        <li class="flex items-start gap-3">
+          <svg class="w-6 h-6 text-accent-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+          <div>
+            <strong>绝对中立：</strong>我们拒绝任何形式的“充值删帖”或虚假夸大。所有上榜品牌均经过长达数月的自费跟踪测试。
+          </div>
+        </li>
+        <li class="flex items-start gap-3">
+          <svg class="w-6 h-6 text-accent-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+          <div>
+            <strong>数据说话：</strong>放弃主观感受，拥抱客观数据。测速图、延迟监控、价格带宽比是我们评判的核心指标。
+          </div>
+        </li>
+        <li class="flex items-start gap-3">
+          <svg class="w-6 h-6 text-accent-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+          <div>
+            <strong>隐私优先：</strong>我们不仅关注速度，更关注隐私安全。我们会详细审查商家的隐私政策及协议加密方式。
+          </div>
+        </li>
+      </ul>
+
+      <h2 class="text-2xl font-bold text-[var(--text-color)] mt-12 mb-4">商业披露 (Affiliate Disclosure)</h2>
+      <div class="bg-[var(--card-bg)] border border-[var(--border-color)] p-6 rounded-xl">
+        <p class="m-0 text-sm text-[var(--text-color)]/80">
+          为了维持服务器运行、节点采购及测试成本，本站使用了联盟营销链接。当您通过我们网站的链接访问商家并完成购买时，我们可能会获得一笔小额佣金，这<strong>绝不会</strong>增加您支付的价格，相反，往往还能为您带来本站专属的优惠折扣。
+        </p>
+      </div>
+
+    </div>
+  </div>
+</BaseLayout>

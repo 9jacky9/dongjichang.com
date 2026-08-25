@@ -1,0 +1,42 @@
+---
+interface SpeedTest {
+  region: string;
+  image?: any;
+  date: Date;
+  conclusion: string;
+}
+
+interface Props {
+  tests: SpeedTest[];
+  brandName: string;
+}
+
+const { tests, brandName } = Astro.props;
+---
+
+<div class="my-8">
+  <h2 class="text-2xl font-bold text-[var(--text-color)] mb-4">{brandName} 晚高峰测速报告</h2>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    {tests.map((test) => (
+      <div class="bg-[var(--card-bg)] border border-[var(--border-color)] rounded-xl overflow-hidden hover:border-primary-500 transition-colors">
+        <div class="aspect-video bg-[var(--bg-color)] flex items-center justify-center border-b border-[var(--border-color)]">
+          {/* Use standard img tag since the image is just a URL or placeholder in our current schema context */}
+          <div class="w-full h-full flex items-center justify-center text-[var(--text-color)]/50">
+            [测速截图: {test.region}]
+          </div>
+        </div>
+        <div class="p-4">
+          <div class="flex justify-between items-center mb-2">
+            <h3 class="font-bold text-[var(--text-color)]">{test.region}</h3>
+            <time class="text-xs text-[var(--text-color)]/60 bg-[var(--bg-color)] px-2 py-1 rounded">
+              {test.date.toISOString().split('T')[0]}
+            </time>
+          </div>
+          <p class="text-sm text-[var(--text-color)]/80">
+            {test.conclusion}
+          </p>
+        </div>
+      </div>
+    ))}
+  </div>
+</div>

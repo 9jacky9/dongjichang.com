@@ -1,0 +1,33 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import FAQAccordion from '../components/FAQAccordion.astro';
+
+const faqs = [
+  { question: "你们的评测是客观中立的吗？", answer: "是的。我们通过自费购买服务进行测试，绝不接受商家的“充值”删帖或人为调高评分。我们的盈利来源仅为用户通过我们的专属链接购买服务时产生的联盟佣金，但这不会影响我们的客观评价。" },
+  { question: "为什么有些知名机场没有被收录？", answer: "我们的筛选标准非常严格。未被收录可能是因为：1. 运营时间不足半年，存在跑路风险；2. 我们在实测中发现其稳定性或速度不达标；3. 我们暂未完成对其的测试流程。" },
+  { question: "数据多久更新一次？", answer: "我们的自动化测速节点每天会在晚高峰（20:00-24:00）进行抽测。评测文章的大版本更新（如套餐变动、线路大规模调整）通常每月进行一次复核。" },
+  { question: "通过你们的链接购买有什么好处？", answer: "通过我们的链接购买，您通常可以获得全网最低的专属优惠码折扣。同时，这也是对我们持续产出高质量评测内容的资金支持。" }
+];
+---
+
+<BaseLayout 
+  title="常见问题 (FAQ)" 
+  description="关于本站评测标准与服务筛选的常见问题解答。"
+>
+  <div class="container mx-auto px-4 py-16 max-w-3xl">
+    <h1 class="text-4xl font-bold mb-8 text-[var(--text-color)] text-center">常见问题与解答</h1>
+    <div class="prose dark:prose-invert max-w-none mb-12 text-[var(--text-color)]/80 text-center">
+      <p>如果您对我们的评测流程、数据来源或网站运营有任何疑问，请参考以下解答。</p>
+    </div>
+    
+    <FAQAccordion faqs={faqs} />
+    
+    <div class="mt-16 p-8 bg-[var(--card-bg)] border border-[var(--border-color)] rounded-2xl text-center">
+      <h2 class="text-2xl font-bold mb-4 text-[var(--text-color)]">没有找到您的问题？</h2>
+      <p class="text-[var(--text-color)]/70 mb-6">欢迎通过邮件与我们取得联系，我们将尽快为您解答。</p>
+      <a href="mailto:contact@example.com" class="inline-block px-6 py-3 bg-accent-500 hover:bg-accent-600 text-white font-medium rounded-lg transition-colors">
+        联系我们
+      </a>
+    </div>
+  </div>
+</BaseLayout>

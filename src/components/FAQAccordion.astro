@@ -1,0 +1,31 @@
+---
+interface FAQ {
+  question: string;
+  answer: string;
+}
+
+interface Props {
+  faqs: FAQ[];
+}
+
+const { faqs } = Astro.props;
+---
+
+<div class="my-10">
+  <h3 class="text-2xl font-bold mb-6 text-[var(--text-color)]">常见问题 (FAQ)</h3>
+  <div class="space-y-4">
+    {faqs.map((faq, index) => (
+      <details class="group bg-[var(--card-bg)] border border-[var(--border-color)] rounded-xl [&_summary::-webkit-details-marker]:hidden" open={index === 0}>
+        <summary class="flex items-center justify-between cursor-pointer p-5 font-medium text-[var(--text-color)]">
+          <span>{faq.question}</span>
+          <span class="transition group-open:rotate-180">
+            <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+          </span>
+        </summary>
+        <div class="p-5 pt-0 text-[var(--text-color)]/80 leading-relaxed border-t border-transparent group-open:border-[var(--border-color)]">
+          <p class="pt-4">{faq.answer}</p>
+        </div>
+      </details>
+    ))}
+  </div>
+</div>

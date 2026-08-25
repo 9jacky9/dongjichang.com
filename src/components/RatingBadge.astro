@@ -1,0 +1,47 @@
+---
+interface Props {
+  score: number;
+  max?: number;
+  size?: 'sm' | 'md' | 'lg';
+  label?: string;
+}
+
+const { score, max = 5, size = 'md', label } = Astro.props;
+const percentage = (score / max) * 100;
+
+const sizeClasses = {
+  sm: 'text-xs w-4 h-4',
+  md: 'text-sm w-5 h-5',
+  lg: 'text-base w-6 h-6',
+};
+---
+
+<div class="flex items-center gap-2">
+  {label && <span class={`font-medium text-[var(--text-color)]/80 ${size === 'sm' ? 'text-xs' : size === 'lg' ? 'text-base' : 'text-sm'}`}>{label}</span>}
+  <div class="flex items-center" aria-label={`评分: ${score} / ${max}`}>
+    {Array.from({ length: max }).map((_, i) => (
+      <svg 
+        class={`${sizeClasses[size]} ${i < Math.floor(score) ? 'text-warning' : i === Math.floor(score) && score % 1 !== 0 ? 'text-warning' : 'text-[var(--border-color)]'}`} 
+        xmlns="http://www.w3.org/2000/svg" 
+        viewBox="0 0 24 24" 
+        fill="currentColor"
+      >
+        {i === Math.floor(score) && score % 1 !== 0 ? (
+          <defs>
+            <linearGradient id={`halfGrad-${i}-${score}`} x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset={`${(score % 1) * 100}%`} stop-color="currentColor" />
+              <stop offset={`${(score % 1) * 100}%`} stop-color="var(--border-color)" />
+            </linearGradient>
+          </defs>
+        ) : null}
+        <path 
+          fill={i === Math.floor(score) && score % 1 !== 0 ? `url(#halfGrad-${i}-${score})` : "currentColor"}
+          d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"
+        />
+      </svg>
+    ))}
+  </div>
+  <span class={`font-bold text-[var(--text-color)] ${size === 'sm' ? 'text-xs' : size === 'lg' ? 'text-lg' : 'text-base'}`}>
+    {score.toFixed(1)}
+  </span>
+</div>
