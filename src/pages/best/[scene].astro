@@ -19,13 +19,18 @@ const allReviews = await getCollection('reviews');
 // For now, we just sort differently or pick a subset to simulate scene filtering
 const filteredReviews = allReviews.sort((a, b) => b.data.rating.overall - a.data.rating.overall).slice(0, 3);
 
-const compareBrands = filteredReviews.map(review => ({
-  name: review.data.name,
-  score: review.data.rating.overall,
-  price: review.data.pricing?.[0]?.price || '暂无数据',
-  protocol: 'Shadowsocks / V2Ray', 
-  link: review.data.affiliateLink
-}));
+const compareBrands = filteredReviews.map(review => {
+  const regions = (review.data.speedTests || []).map(st => st.region);
+  return {
+    name: review.data.name,
+    score: review.data.rating.overall,
+    price: review.data.pricing?.[0]?.price || '暂无数据',
+    protocol: review.data.protocol || '', 
+    link: review.data.affiliateLink,
+    regions: regions,
+    tags: review.data.targetAudience || []
+  };
+});
 ---
 
 <BaseLayout 

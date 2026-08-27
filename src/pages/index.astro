@@ -10,19 +10,54 @@ const allReviews = await getCollection('reviews');
 const topReviews = allReviews.sort((a, b) => b.data.rating.overall - a.data.rating.overall).slice(0, 4);
 
 // Format for CompareTable
-const compareBrands = topReviews.map(review => ({
-  name: review.data.name,
-  score: review.data.rating.overall,
-  price: review.data.pricing?.[0]?.price || '暂无数据',
-  protocol: 'Shadowsocks / V2Ray', // Placeholder as not in schema yet
-  link: review.data.affiliateLink
-}));
+const compareBrands = topReviews.map(review => {
+  const monthlyPlan = review.data.pricing?.find(p => p.period === '月付' || p.period === 'monthly');
+  const price = monthlyPlan?.price ?? (review.data.pricing?.[0]?.price
+    ? `${review.data.pricing[0].price}（${review.data.pricing[0].period}）`
+    : '暂无数据');
+
+  const regions = (review.data.speedTests || []).map(st => st.region);
+
+  return {
+    name: review.data.name,
+    score: review.data.rating.overall,
+    price: price,
+    protocol: review.data.protocol || '',
+    link: review.data.affiliateLink,
+    regions: regions,
+    tags: review.data.targetAudience || []
+  };
+});
 
 const homeFaqs = [
   { question: "新手应该如何选择代理服务？", answer: "建议首先明确您的需求：是注重看流媒体（Netflix/Disney+），还是注重晚高峰的稳定性（办公/游戏）。一般建议新手从月付开始尝试，避免一次性投入过多风险。" },
   { question: "免费节点安全吗？", answer: "免费节点往往存在隐私泄露风险和不稳定的问题。如果您对数据安全有要求，建议选择付费的专业服务提供商，我们评测的均为运营半年以上的付费品牌。" },
   { question: "专线（IEPL/IPLC）和普通中转有什么区别？", answer: "专线不经过公共互联网拥堵节点，晚高峰时延迟更低、速度更稳定，但价格相对较高。普通中转性价比更高，适合日常使用。" }
 ];
+
+const getFlag = (region: string) => {
+  if (region.includes('香港')) return '🇭🇰';
+  if (region.includes('台湾')) return '🇹🇼';
+  if (region.includes('日本')) return '🇯🇵';
+  if (region.includes('新加坡') || region.includes('狮城')) return '🇸🇬';
+  if (region.includes('美国')) return '🇺🇸';
+  if (region.includes('韩国')) return '🇰🇷';
+  if (region.includes('英国')) return '🇬🇧';
+  return '🌐';
+};
+
+const getFeatureIcon = (pro: string) => {
+  if (pro.includes('流媒体') || pro.includes('解锁')) {
+    return `<svg class="w-3.5 h-3.5 text-purple-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>`;
+  }
+  if (pro.includes('流量') || pro.includes('大')) {
+    return `<svg class="w-3.5 h-3.5 text-orange-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>`;
+  }
+  if (pro.includes('专线') || pro.includes('IPLC') || pro.includes('IEPL')) {
+    return `<svg class="w-3.5 h-3.5 text-primary-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>`;
+  }
+  return `<svg class="w-3.5 h-3.5 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>`;
+};
 ---
 
 <BaseLayout 
@@ -30,40 +65,50 @@ const homeFaqs = [
   description="懂机场帮你把机场服务讲清楚：真实测速、套餐比价、不踩坑选购指南。"
 >
   <!-- Hero Section -->
-  <div class="relative bg-black text-white overflow-hidden">
-    <div class="absolute inset-0 z-0 opacity-40">
-      <!-- Use the generated SVG background -->
+  <div class="relative bg-[var(--bg-color)] overflow-hidden border-b border-[var(--border-color)]">
+    <div class="absolute inset-0 z-0 opacity-20 dark:opacity-40">
       <img src="/src/assets/hero-bg.svg" alt="Hero Background" class="w-full h-full object-cover" />
     </div>
-    <div class="container mx-auto px-4 py-24 md:py-32 relative z-10 text-center max-w-3xl">
-      <h1 class="text-4xl md:text-6xl font-bold mb-6 tracking-tight">
-        懂机场，<span class="text-primary-400">少踩坑</span>
+    
+    <div class="container mx-auto px-4 py-20 md:py-28 relative z-10 text-center max-w-4xl">
+      <h1 class="text-5xl md:text-6xl font-bold mb-6 tracking-tight text-[var(--text-color)]">
+        懂机场，<span class="text-primary-600 dark:text-primary-400">少踩坑</span>
       </h1>
-      <p class="text-lg md:text-xl text-white/80 mb-10 leading-relaxed">
+      <p class="text-lg md:text-xl text-[var(--text-color)]/70 mb-10 leading-relaxed max-w-2xl mx-auto">
         我们收录了数十家主流服务商。不看广告，只看疗效，替你把关，把机场讲清楚。
       </p>
       
-      <div class="flex flex-col sm:flex-row gap-4 justify-center">
-        <a href="/best" class="bg-primary-600 hover:bg-primary-500 text-white px-8 py-4 rounded-md font-bold transition-all cyber-glow border border-primary-400/50">
-          查看场景推荐榜单
+      <div class="flex flex-col sm:flex-row gap-4 justify-center mb-16">
+        <a href="/compare" class="bg-primary-600 hover:bg-primary-500 text-white px-8 py-4 rounded-xl font-bold transition-all shadow-[0_0_20px_rgba(99,102,241,0.3)] hover:shadow-[0_0_30px_rgba(99,102,241,0.5)] hover:-translate-y-1">
+          查看全网参数对比
         </a>
-        <a href="#top-reviews" class="bg-white/5 hover:bg-white/10 backdrop-blur border border-white/10 hover:border-primary-400 text-white px-8 py-4 rounded-md font-medium transition-all">
+        <a href="#top-reviews" class="bg-[var(--card-bg)] border border-[var(--border-color)] hover:border-primary-400 text-[var(--text-color)] px-8 py-4 rounded-xl font-medium transition-all hover:shadow-lg hover:-translate-y-1">
           浏览最新测评
         </a>
       </div>
       
-      <div class="mt-12 flex justify-center gap-8 text-sm text-white/60">
-        <div class="flex items-center gap-2">
-          <svg class="w-5 h-5 text-primary-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-          {allReviews.length} 家收录
+      <!-- 数据可视化区块 -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-3xl mx-auto">
+        <div class="bg-[var(--card-bg)] border border-[var(--border-color)] p-6 rounded-2xl shadow-sm flex flex-col items-center justify-center gap-2 transition-transform hover:-translate-y-1">
+          <div class="w-12 h-12 bg-primary-100 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400 rounded-full flex items-center justify-center mb-1">
+            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+          </div>
+          <div class="text-3xl font-black text-[var(--text-color)]">{allReviews.length} <span class="text-lg font-bold">家</span></div>
+          <div class="text-sm font-medium text-[var(--text-color)]/60">严选品牌收录</div>
         </div>
-        <div class="flex items-center gap-2">
-          <svg class="w-5 h-5 text-primary-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-          10+ 测速维度
+        <div class="bg-[var(--card-bg)] border border-[var(--border-color)] p-6 rounded-2xl shadow-sm flex flex-col items-center justify-center gap-2 transition-transform hover:-translate-y-1">
+          <div class="w-12 h-12 bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400 rounded-full flex items-center justify-center mb-1">
+            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+          </div>
+          <div class="text-3xl font-black text-[var(--text-color)]">10+ <span class="text-lg font-bold">项</span></div>
+          <div class="text-sm font-medium text-[var(--text-color)]/60">深度测速维度</div>
         </div>
-        <div class="flex items-center gap-2">
-          <svg class="w-5 h-5 text-primary-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
-          每月复核更新
+        <div class="bg-[var(--card-bg)] border border-[var(--border-color)] p-6 rounded-2xl shadow-sm flex flex-col items-center justify-center gap-2 transition-transform hover:-translate-y-1">
+          <div class="w-12 h-12 bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 rounded-full flex items-center justify-center mb-1">
+            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+          </div>
+          <div class="text-3xl font-black text-[var(--text-color)]">100%</div>
+          <div class="text-sm font-medium text-[var(--text-color)]/60">真实独立自费</div>
         </div>
       </div>
     </div>
@@ -80,24 +125,52 @@ const homeFaqs = [
       </div>
       
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {topReviews.map(review => (
-          <a href={`/reviews/${review.id}`} class="group flex flex-col bg-[var(--card-bg)] border border-[var(--border-color)] rounded-lg overflow-hidden hover:border-primary-500 hover:shadow-[0_0_15px_rgba(99,102,241,0.1)] transition-all">
+        {topReviews.map(review => {
+          const regions = (review.data.speedTests || []).map(st => st.region);
+          const uniqueRegions = [...new Set(regions)].slice(0, 5);
+          const topPros = (review.data.pros || []).slice(0, 3);
+          
+          return (
+          <a href={`/reviews/${review.id}`} class="group flex flex-col bg-[var(--card-bg)] border border-[var(--border-color)] rounded-2xl overflow-hidden hover:border-primary-500 hover:shadow-[0_0_20px_rgba(99,102,241,0.15)] transition-all">
             <div class="p-6 flex-grow">
               <div class="flex justify-between items-start mb-4">
-                <div class="w-12 h-12 rounded-lg overflow-hidden bg-[var(--bg-color)] border border-[var(--border-color)] p-1">
-                  <img src={`/src/assets/brands/${review.id}.svg`} alt={`${review.data.name} Logo`} class="w-full h-full object-cover rounded-lg" />
+                <div class="w-12 h-12 rounded-xl overflow-hidden bg-[var(--bg-color)] border border-[var(--border-color)] p-1.5 shadow-sm">
+                  <img src={`/src/assets/brands/${review.id}.svg`} alt={`${review.data.name} Logo`} class="w-full h-full object-contain rounded-lg" />
                 </div>
                 <RatingBadge score={review.data.rating.overall} size="sm" />
               </div>
-              <h3 class="text-xl font-bold text-[var(--text-color)] mb-2 group-hover:text-primary-500 transition-colors">{review.data.name}</h3>
-              <p class="text-sm text-[var(--text-color)]/70 line-clamp-3">{review.data.summary}</p>
+              
+              <h3 class="text-xl font-bold text-[var(--text-color)] mb-3 group-hover:text-primary-500 transition-colors">{review.data.name}</h3>
+              
+              <div class="flex flex-col gap-2 mb-4">
+                {topPros.map(pro => (
+                  <div class="flex items-center gap-2 text-[13px] text-[var(--text-color)]/80 font-medium bg-[var(--bg-color)] px-2 py-1 rounded-md">
+                    <Fragment set:html={getFeatureIcon(pro)} />
+                    <span class="truncate">{pro}</span>
+                  </div>
+                ))}
+              </div>
+              
+              <div class="flex items-center gap-1 mt-auto pt-4 border-t border-[var(--border-color)]/50">
+                <span class="text-xs text-[var(--text-color)]/50 mr-1">节点:</span>
+                {uniqueRegions.length > 0 ? (
+                  uniqueRegions.map(r => (
+                    <span class="text-lg leading-none" title={r}>{getFlag(r)}</span>
+                  ))
+                ) : (
+                  <span class="text-xs text-[var(--text-color)]/50">未公开</span>
+                )}
+              </div>
             </div>
-            <div class="px-6 py-4 border-t border-[var(--border-color)] bg-[var(--bg-color)]/50 group-hover:bg-primary-50 dark:group-hover:bg-primary-900/20 flex justify-between items-center transition-colors">
-              <span class="text-sm font-medium text-primary-600 dark:text-primary-400">查看深度评测</span>
-              <svg class="w-4 h-4 text-primary-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+            
+            <div class="px-6 py-4 bg-[var(--bg-color)]/80 group-hover:bg-primary-50 dark:group-hover:bg-primary-900/20 flex justify-between items-center transition-colors">
+              <span class="text-sm font-bold text-primary-600 dark:text-primary-400">阅读报告</span>
+              <div class="w-8 h-8 rounded-full bg-white dark:bg-black/20 flex items-center justify-center text-primary-500 group-hover:scale-110 transition-transform shadow-sm">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+              </div>
             </div>
           </a>
-        ))}
+        )})}
       </div>
     </section>
 
@@ -107,16 +180,22 @@ const homeFaqs = [
         <h2 class="text-3xl font-bold text-[var(--text-color)] mb-4">核心参数横向对比</h2>
         <p class="text-[var(--text-color)]/70 max-w-2xl mx-auto">直观比对价格、评分与协议，找到最符合您预算与使用习惯的方案。</p>
       </div>
-      <CompareTable brands={compareBrands} />
-      <div class="text-center mt-6">
-        <a href="/compare" class="inline-block px-6 py-3 bg-[var(--bg-color)] border border-[var(--border-color)] hover:border-primary-500 text-[var(--text-color)] rounded-lg font-medium transition-colors">
+      <div class="bg-[var(--card-bg)] border border-[var(--border-color)] rounded-2xl p-2 md:p-6 shadow-sm overflow-hidden">
+        <CompareTable brands={compareBrands} />
+      </div>
+      <div class="text-center mt-8">
+        <a href="/compare" class="inline-flex items-center gap-2 px-6 py-3 bg-[var(--card-bg)] border border-[var(--border-color)] hover:border-primary-500 text-[var(--text-color)] hover:text-primary-500 rounded-xl font-bold transition-all shadow-sm hover:shadow-md hover:-translate-y-0.5">
           查看完整参数对比表
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
         </a>
       </div>
     </section>
 
     <!-- FAQ Section -->
     <section class="mb-10 max-w-3xl mx-auto">
+      <div class="text-center mb-10">
+        <h2 class="text-3xl font-bold text-[var(--text-color)] mb-4">选购指南问答</h2>
+      </div>
       <FAQAccordion faqs={homeFaqs} />
     </section>
   </div>

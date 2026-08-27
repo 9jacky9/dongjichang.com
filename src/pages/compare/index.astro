@@ -13,12 +13,16 @@ const compareBrands = allReviews.map(review => {
     ? `${review.data.pricing[0].price}（${review.data.pricing[0].period}）`
     : '暂无数据');
 
+  const regions = (review.data.speedTests || []).map(st => st.region);
+
   return {
     name: review.data.name,
     score: review.data.rating.overall,
     price: price,
     protocol: review.data.protocol || '',
-    link: review.data.affiliateLink
+    link: review.data.affiliateLink,
+    regions: regions,
+    tags: review.data.targetAudience || []
   };
 }).sort((a, b) => b.score - a.score);
 
