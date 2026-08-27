@@ -8,6 +8,7 @@ import RatingBadge from '../components/RatingBadge.astro';
 const allReviews = await getCollection('reviews');
 // Sort by rating or just take the first 4 for the 'Top 4' list
 const topReviews = allReviews.sort((a, b) => b.data.rating.overall - a.data.rating.overall).slice(0, 4);
+const featuredReviews = allReviews.filter(r => r.data.featured).sort((a, b) => b.data.rating.overall - a.data.rating.overall).slice(0, 4);
 
 // Format for CompareTable
 const compareBrands = topReviews.map(review => {
@@ -66,10 +67,6 @@ const getFeatureIcon = (pro: string) => {
 >
   <!-- Hero Section -->
   <div class="relative bg-[var(--bg-color)] overflow-hidden border-b border-[var(--border-color)]">
-    <div class="absolute inset-0 z-0 opacity-20 dark:opacity-40">
-      <img src="/src/assets/hero-bg.svg" alt="Hero Background" class="w-full h-full object-cover" />
-    </div>
-    
     <div class="container mx-auto px-4 py-20 md:py-28 relative z-10 text-center max-w-4xl">
       <h1 class="text-5xl md:text-6xl font-bold mb-6 tracking-tight text-[var(--text-color)]">
         懂机场，<span class="text-primary-600 dark:text-primary-400">少踩坑</span>
@@ -78,14 +75,34 @@ const getFeatureIcon = (pro: string) => {
         我们收录了数十家主流服务商。不看广告，只看疗效，替你把关，把机场讲清楚。
       </p>
       
-      <div class="flex flex-col sm:flex-row gap-4 justify-center mb-16">
-        <a href="/compare" class="bg-primary-600 hover:bg-primary-500 text-white px-8 py-4 rounded-xl font-bold transition-all shadow-[0_0_20px_rgba(99,102,241,0.3)] hover:shadow-[0_0_30px_rgba(99,102,241,0.5)] hover:-translate-y-1">
+      <div class="flex flex-col sm:flex-row gap-4 justify-center mb-16 relative z-10">
+        <a href="/compare" class="bg-primary-600 hover:bg-primary-500 text-white px-8 py-4 rounded-xl font-bold transition-all shadow-[0_0_20px_rgba(232,115,74,0.3)] hover:shadow-[0_0_30px_rgba(232,115,74,0.5)] hover:-translate-y-1">
           查看全网参数对比
         </a>
         <a href="#top-reviews" class="bg-[var(--card-bg)] border border-[var(--border-color)] hover:border-primary-400 text-[var(--text-color)] px-8 py-4 rounded-xl font-medium transition-all hover:shadow-lg hover:-translate-y-1">
           浏览最新测评
         </a>
       </div>
+
+      <!-- 编辑严选卡片流 -->
+      {featuredReviews.length > 0 && (
+        <div class="mb-16 relative z-10">
+          <h3 class="text-sm font-bold text-[var(--text-color)]/50 uppercase tracking-widest mb-6">编辑严选</h3>
+          <div class="flex flex-wrap justify-center gap-4 md:gap-6">
+            {featuredReviews.map((review, i) => (
+              <a href={`/reviews/${review.id}`} class={`flex items-center gap-3 bg-[var(--card-bg)] border border-[var(--border-color)] hover:border-primary-400 p-3 pr-5 rounded-full shadow-sm hover:shadow-md transition-all ${i % 2 === 1 ? 'md:translate-y-4' : ''}`}>
+                <div class="w-10 h-10 rounded-full overflow-hidden bg-[var(--bg-color)] border border-[var(--border-color)] p-1 shrink-0">
+                  <img src={`/src/assets/brands/${review.id}.svg`} alt={review.data.name} class="w-full h-full object-contain" />
+                </div>
+                <div class="text-left">
+                  <div class="font-bold text-[var(--text-color)] text-sm">{review.data.name}</div>
+                  <div class="text-xs text-[var(--text-color)]/60 line-clamp-1 max-w-[140px] md:max-w-[180px]">{review.data.dongSays}</div>
+                </div>
+              </a>
+            ))}
+          </div>
+        </div>
+      )}
       
       <!-- 数据可视化区块 -->
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-3xl mx-auto">
@@ -131,7 +148,7 @@ const getFeatureIcon = (pro: string) => {
           const topPros = (review.data.pros || []).slice(0, 3);
           
           return (
-          <a href={`/reviews/${review.id}`} class="group flex flex-col bg-[var(--card-bg)] border border-[var(--border-color)] rounded-2xl overflow-hidden hover:border-primary-500 hover:shadow-[0_0_20px_rgba(99,102,241,0.15)] transition-all">
+          <a href={`/reviews/${review.id}`} class="group flex flex-col bg-[var(--card-bg)] border border-[var(--border-color)] rounded-2xl overflow-hidden hover:border-primary-500 hover:shadow-[0_0_20px_rgba(232,115,74,0.15)] transition-all">
             <div class="p-6 flex-grow">
               <div class="flex justify-between items-start mb-4">
                 <div class="w-12 h-12 rounded-xl overflow-hidden bg-[var(--bg-color)] border border-[var(--border-color)] p-1.5 shadow-sm">

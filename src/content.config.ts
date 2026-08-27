@@ -7,6 +7,7 @@ const reviewsCollection = defineCollection({
   schema: ({ image }) => z.object({
     // 基本信息
     name: z.string(),
+    featured: z.boolean().default(false),
     affiliateLink: z.string().url(),
     coupon: z.string().optional(),
     couponDesc: z.string().optional(),

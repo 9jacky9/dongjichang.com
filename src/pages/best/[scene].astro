@@ -14,11 +14,22 @@ export function getStaticPaths() {
 
 const { title, keyword } = Astro.props;
 
-// Mock logic: Fetch reviews and randomly pick some based on the scene keyword
+// Real logic: Fetch reviews and filter based on the scene keywords
 const allReviews = await getCollection('reviews');
-// For now, we just sort differently or pick a subset to simulate scene filtering
-const filteredReviews = allReviews.sort((a, b) => b.data.rating.overall - a.data.rating.overall).slice(0, 3);
+const searchKeywords = keyword === '便宜' ? ['性价比', '便宜', '轻度', '学生'] : [keyword];
 
+const filteredReviews = allReviews
+  .filter(review => {
+    const textToSearch = [
+      ...(review.data.targetAudience || []),
+      ...(review.data.pros || []),
+      review.data.summary
+    ].join(' ');
+    
+    return searchKeywords.some(kw => textToSearch.includes(kw));
+  })
+  .sort((a, b) => b.data.rating.overall - a.data.rating.overall)
+  .slice(0, 5);
 const compareBrands = filteredReviews.map(review => {
   const regions = (review.data.speedTests || []).map(st => st.region);
   return {
