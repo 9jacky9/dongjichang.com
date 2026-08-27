@@ -7,13 +7,20 @@ import FAQAccordion from '../../components/FAQAccordion.astro';
 const allReviews = await getCollection('reviews');
 
 // Format for CompareTable
-const compareBrands = allReviews.map(review => ({
-  name: review.data.name,
-  score: review.data.rating.overall,
-  price: review.data.pricing?.[0]?.price || '暂无数据',
-  protocol: 'Shadowsocks / V2Ray / Trojan', // Placeholder as not in schema yet
-  link: review.data.affiliateLink
-})).sort((a, b) => b.score - a.score);
+const compareBrands = allReviews.map(review => {
+  const monthlyPlan = review.data.pricing?.find(p => p.period === '月付' || p.period === 'monthly');
+  const price = monthlyPlan?.price ?? (review.data.pricing?.[0]?.price
+    ? `${review.data.pricing[0].price}（${review.data.pricing[0].period}）`
+    : '暂无数据');
+
+  return {
+    name: review.data.name,
+    score: review.data.rating.overall,
+    price: price,
+    protocol: review.data.protocol || '',
+    link: review.data.affiliateLink
+  };
+}).sort((a, b) => b.score - a.score);
 
 const compareFaqs = [
   { question: "横向对比的评分依据是什么？", answer: "我们的评分主要分为四个维度：速度（30%）、稳定性（30%）、性价比（20%）和售后服务（20%）。每一项得分均通过长达数周的实际测试和工单响应测试得出。" },

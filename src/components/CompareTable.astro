@@ -41,7 +41,7 @@ const { brands } = Astro.props;
             <span class="font-mono text-[var(--text-color)]">{brand.price}</span>
           </td>
           <td class="py-4 px-6 text-sm text-[var(--text-color)]/80">
-            {brand.protocol}
+            {brand.protocol || '未公开'}
           </td>
           <td class="py-4 px-6 text-right">
             <a 

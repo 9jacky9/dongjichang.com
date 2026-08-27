@@ -11,6 +11,7 @@ const reviewsCollection = defineCollection({
     coupon: z.string().optional(),
     couponDesc: z.string().optional(),
     dongSays: z.string(), // 懂说：一句话锐评，有态度、不打官腔
+    protocol: z.string().optional(), // 该品牌套餐页面实际标注的协议名称，没写就留空，不要用通用占位符
 
     // 评测结构化数据
     rating: z.object({
