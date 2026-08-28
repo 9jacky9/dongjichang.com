@@ -75,6 +75,7 @@ const blogCollection = defineCollection({
     relatedBrands: z.array(z.string()).optional(),
     articleType: z.enum(['roundup', 'deep-dive', 'guide']),
     pinned: z.boolean().default(false),
+    draft: z.boolean().default(false),
   })
 });
 
