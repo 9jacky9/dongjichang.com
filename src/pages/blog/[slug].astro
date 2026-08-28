@@ -1,0 +1,60 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog');
+  return posts.map(post => ({
+    params: { slug: post.id },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+---
+
+<BaseLayout 
+  title={post.data.title} 
+  description={post.data.description}
+>
+  <article class="container mx-auto px-4 py-16 max-w-4xl">
+    <header class="mb-12 text-center">
+      <div class="flex items-center justify-center gap-2 mb-6">
+        <span class="text-sm font-medium bg-accent-50 text-accent-600 dark:bg-accent-900/30 dark:text-accent-400 px-3 py-1 rounded-full">
+          {post.data.articleType === 'roundup' ? '推荐榜' : post.data.articleType === 'deep-dive' ? '深度测评' : '教程科普'}
+        </span>
+        <span class="text-sm text-[var(--text-color)]/50">
+          发布于 {post.data.publishDate.toISOString().split('T')[0]}
+        </span>
+      </div>
+      <h1 class="text-4xl md:text-5xl font-bold text-[var(--text-color)] mb-6 leading-tight">
+        {post.data.title}
+      </h1>
+      <div class="flex flex-wrap justify-center gap-2 mt-4">
+         {post.data.keywords.map(kw => (
+           <span class="text-xs text-[var(--text-color)]/60 bg-[var(--card-bg)] border border-[var(--border-color)] px-2 py-1 rounded">
+             #{kw}
+           </span>
+         ))}
+      </div>
+    </header>
+
+    <div class="prose prose-lg dark:prose-invert prose-accent max-w-none prose-headings:text-[var(--text-color)] prose-a:text-accent-600 dark:prose-a:text-accent-400 hover:prose-a:text-accent-500 prose-img:rounded-xl">
+      <Content />
+    </div>
+    
+    {post.data.relatedBrands && post.data.relatedBrands.length > 0 && (
+      <div class="mt-16 pt-8 border-t border-[var(--border-color)]">
+         <h3 class="text-2xl font-bold mb-6 text-[var(--text-color)]">文中提到的品牌</h3>
+         <div class="flex flex-wrap gap-4">
+            {post.data.relatedBrands.map(brand => (
+               <a href={`/reviews/${brand}`} class="bg-[var(--card-bg)] border border-[var(--border-color)] hover:border-accent-500 px-4 py-2 rounded-lg text-accent-600 dark:text-accent-400 font-medium transition-colors">
+                 查看 {brand} 详细评测 &rarr;
+               </a>
+            ))}
+         </div>
+      </div>
+    )}
+  </article>
+</BaseLayout>

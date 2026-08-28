@@ -8,10 +8,8 @@ const allReviews = await getCollection('reviews');
 
 // Format for CompareTable
 const compareBrands = allReviews.map(review => {
-  const monthlyPlan = review.data.pricing?.find(p => p.period === '月付' || p.period === 'monthly');
-  const price = monthlyPlan?.price ?? (review.data.pricing?.[0]?.price
-    ? `${review.data.pricing[0].price}（${review.data.pricing[0].period}）`
-    : '暂无数据');
+  const monthlyPlan = review.data.pricing?.find(p => p.billingCycle === 'monthly');
+  const price = monthlyPlan ? `￥${monthlyPlan.price}/月` : (review.data.pricing?.length ? '该品牌无月付选项' : '暂无数据');
 
   const regions = (review.data.speedTests || []).map(st => st.region);
 

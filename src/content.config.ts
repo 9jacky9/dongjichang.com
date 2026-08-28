@@ -26,12 +26,18 @@ const reviewsCollection = defineCollection({
     pros: z.array(z.string()),
     cons: z.array(z.string()),
     targetAudience: z.array(z.string()),
+    scenes: z.array(z.enum([
+      'stable', 'budget', 'heavy-traffic', 'ai-power', 'streaming-hq', 'beginner', 'balanced'
+    ])).default([]),
+    featured: z.boolean().default(false),
+    featuredNote: z.string().optional(),
 
     // 套餐信息 (optional for now, as images/details are pending)
     pricing: z.array(z.object({
       name: z.string(),
-      price: z.string(), // e.g., "￥15.00"
-      period: z.string(), // e.g., "月付", "年付"
+      price: z.number(), // updated to number
+      billingCycle: z.enum(['monthly', 'quarterly', 'yearly', 'onetime']),
+      period: z.string().optional(), // kept for backward compatibility during migration
       isLimited: z.boolean().default(false),
       refundable: z.boolean().default(false),
     })).optional(),
@@ -58,6 +64,21 @@ const reviewsCollection = defineCollection({
   })
 });
 
+const blogCollection = defineCollection({
+  loader: glob({ pattern: '**/*.mdx', base: "./src/content/blog" }),
+  schema: () => z.object({
+    title: z.string(),
+    description: z.string(),
+    publishDate: z.date(),
+    updatedDate: z.date().optional(),
+    keywords: z.array(z.string()),
+    relatedBrands: z.array(z.string()).optional(),
+    articleType: z.enum(['roundup', 'deep-dive', 'guide']),
+    pinned: z.boolean().default(false),
+  })
+});
+
 export const collections = {
   'reviews': reviewsCollection,
+  'blog': blogCollection,
 };

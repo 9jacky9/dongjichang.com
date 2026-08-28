@@ -1,0 +1,64 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+// Fetch all blog posts
+const allPosts = await getCollection('blog');
+
+// Sort: pinned first, then by publishDate descending
+const sortedPosts = allPosts.sort((a, b) => {
+  if (a.data.pinned && !b.data.pinned) return -1;
+  if (!a.data.pinned && b.data.pinned) return 1;
+  return b.data.publishDate.valueOf() - a.data.publishDate.valueOf();
+});
+---
+
+<BaseLayout 
+  title="机场评测与翻墙教程指南" 
+  description="懂机场官方博客，提供最新机场推荐榜单、品牌深度测评以及科学上网新手教程。"
+>
+  <div class="bg-[var(--card-bg)] border-b border-[var(--border-color)]">
+    <div class="container mx-auto px-4 py-16 text-center max-w-3xl">
+      <h1 class="text-4xl font-bold mb-4 text-[var(--text-color)]">教程指南 & 深度测评</h1>
+      <p class="text-lg text-[var(--text-color)]/70">
+        最真实的机场测速体验，最硬核的防坑指南。
+      </p>
+    </div>
+  </div>
+
+  <div class="container mx-auto px-4 py-16 max-w-5xl">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      {sortedPosts.map(post => (
+        <a href={`/blog/${post.id}`} class="group relative bg-[var(--card-bg)] border border-[var(--border-color)] rounded-2xl overflow-hidden hover:border-accent-500 hover:shadow-xl hover:shadow-accent-500/10 transition-all flex flex-col p-6">
+          {post.data.pinned && (
+             <div class="absolute top-0 right-0 bg-accent-500 text-white text-xs font-bold px-3 py-1 rounded-bl-lg">
+               置顶推荐
+             </div>
+          )}
+          <div class="flex items-center gap-2 mb-4">
+            <span class="text-xs font-medium bg-[var(--bg-color)] border border-[var(--border-color)] px-2 py-1 rounded text-[var(--text-color)]/70">
+              {post.data.articleType === 'roundup' ? '推荐榜' : post.data.articleType === 'deep-dive' ? '深度测评' : '教程科普'}
+            </span>
+            <span class="text-xs text-[var(--text-color)]/50">
+              {post.data.publishDate.toISOString().split('T')[0]}
+            </span>
+          </div>
+          
+          <h2 class="text-2xl font-bold text-[var(--text-color)] mb-3 group-hover:text-accent-500 transition-colors">
+            {post.data.title}
+          </h2>
+          
+          <p class="text-[var(--text-color)]/70 leading-relaxed line-clamp-3 mb-6">
+            {post.data.description}
+          </p>
+          
+          <div class="mt-auto flex flex-wrap gap-2">
+             {post.data.keywords.slice(0, 3).map(kw => (
+               <span class="text-xs text-[var(--text-color)]/50 bg-[var(--bg-color)] px-2 py-1 rounded-sm">#{kw}</span>
+             ))}
+          </div>
+        </a>
+      ))}
+    </div>
+  </div>
+</BaseLayout>

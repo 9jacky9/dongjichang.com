@@ -18,17 +18,23 @@ pros:
 cons:
   - '年付套餐月可用流量较少'
 targetAudience:
+
   - "客户端依赖者"
   - "日常使用"
+scenes:
+  - 'heavy-traffic'
+  - 'streaming-hq'
 pricing:
   - name: '行星基础版 (Basic Plan)'
-    price: '￥25.00'
+    price: 25.00
     period: '月付'
+    billingCycle: 'monthly'
     isLimited: true
     refundable: false
   - name: '星云年付小包 (Annual Plan)'
-    price: '￥96.00'
+    price: 96.00
     period: '年付'
+    billingCycle: 'yearly'
     isLimited: true
     refundable: false
 speedTests:

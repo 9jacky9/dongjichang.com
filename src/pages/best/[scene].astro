@@ -4,38 +4,35 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import CompareTable from '../../components/CompareTable.astro';
 import RatingBadge from '../../components/RatingBadge.astro';
 
-export function getStaticPaths() {
-  return [
-    { params: { scene: 'streaming' }, props: { title: '流媒体解锁优选榜单', keyword: '流媒体' } },
-    { params: { scene: 'gaming' }, props: { title: '低延迟游戏专线榜单', keyword: '游戏' } },
-    { params: { scene: 'budget' }, props: { title: '高性价比平价榜单', keyword: '便宜' } },
+export async function getStaticPaths() {
+  const scenes = [
+    { id: 'stable', title: '稳定优先榜单' },
+    { id: 'budget', title: '极致便宜榜单' },
+    { id: 'heavy-traffic', title: '大流量重度下载榜单' },
+    { id: 'ai-power', title: 'AI重度使用榜单' },
+    { id: 'streaming-hq', title: '流媒体高画质榜单' },
+    { id: 'beginner', title: '新手友好榜单' },
   ];
+  return scenes.map(s => ({ params: { scene: s.id }, props: { title: s.title, keyword: s.id } }));
 }
 
 const { title, keyword } = Astro.props;
+const { scene } = Astro.params;
 
-// Real logic: Fetch reviews and filter based on the scene keywords
+// Real logic: Fetch reviews and filter based on the scene keyword
 const allReviews = await getCollection('reviews');
-const searchKeywords = keyword === '便宜' ? ['性价比', '便宜', '轻度', '学生'] : [keyword];
-
 const filteredReviews = allReviews
-  .filter(review => {
-    const textToSearch = [
-      ...(review.data.targetAudience || []),
-      ...(review.data.pros || []),
-      review.data.summary
-    ].join(' ');
-    
-    return searchKeywords.some(kw => textToSearch.includes(kw));
-  })
-  .sort((a, b) => b.data.rating.overall - a.data.rating.overall)
-  .slice(0, 5);
+  .filter(r => r.data.scenes?.includes(scene as any))
+  .sort((a, b) => b.data.rating.overall - a.data.rating.overall);
 const compareBrands = filteredReviews.map(review => {
   const regions = (review.data.speedTests || []).map(st => st.region);
   return {
     name: review.data.name,
     score: review.data.rating.overall,
-    price: review.data.pricing?.[0]?.price || '暂无数据',
+    price: (() => {
+      const mp = review.data.pricing?.find(p => p.billingCycle === 'monthly');
+      return mp ? `￥${mp.price}/月` : (review.data.pricing?.length ? '该品牌无月付选项' : '暂无数据');
+    })(),
     protocol: review.data.protocol || '', 
     link: review.data.affiliateLink,
     regions: regions,
@@ -101,7 +98,10 @@ const compareBrands = filteredReviews.map(review => {
               </div>
               <div class="bg-accent-50 dark:bg-accent-900/20 p-4 rounded-xl border border-accent-100 dark:border-accent-800 flex flex-col justify-center items-center text-center">
                 <span class="text-sm text-[var(--text-color)]/70 mb-1">最低套餐</span>
-                <span class="text-2xl font-bold text-accent-600 dark:text-accent-400 mb-3">{review.data.pricing?.[0]?.price || '未知'}</span>
+                <span class="text-2xl font-bold text-accent-600 dark:text-accent-400 mb-3">{(() => {
+                  const mp = review.data.pricing?.find(p => p.billingCycle === 'monthly');
+                  return mp ? `￥${mp.price}/月` : (review.data.pricing?.length ? '该品牌无月付选项' : '暂无数据');
+                })()}</span>
                 <a href={review.data.affiliateLink} target="_blank" rel="nofollow sponsored" class="inline-block w-full py-2 bg-accent-500 hover:bg-accent-600 text-white font-medium rounded-lg transition-colors">
                   前往官网
                 </a>

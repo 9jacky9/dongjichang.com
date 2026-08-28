@@ -18,22 +18,29 @@ pros:
 cons:
   - '体验小包仅限新用户购买一次'
 targetAudience:
+
   - "轻度使用"
   - "学生党"
+scenes:
+  - 'budget'
+  - 'streaming-hq'
 pricing:
   - name: '可信云体验小包'
-    price: '￥2.00'
+    price: 2.00
     period: '3天'
+    billingCycle: 'monthly'
     isLimited: true
     refundable: false
   - name: '可信云年费小礼包'
-    price: '￥96.00'
+    price: 96.00
     period: '年付'
+    billingCycle: 'yearly'
     isLimited: true
     refundable: false
   - name: '可信云月付小包'
-    price: '￥15.00'
+    price: 15.00
     period: '月付'
+    billingCycle: 'monthly'
     isLimited: true
     refundable: false
 speedTests:

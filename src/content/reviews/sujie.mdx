@@ -18,22 +18,29 @@ pros:
 cons:
   - '年付流量较少'
 targetAudience:
+
   - "轻量查资料"
   - "新闻资讯"
+scenes:
+  - 'heavy-traffic'
+  - 'streaming-hq'
 pricing:
   - name: '单月试用15元'
-    price: '￥15.00'
+    price: 15.00
     period: '月付'
+    billingCycle: 'monthly'
     isLimited: true
     refundable: false
   - name: '限时年付'
-    price: '￥90.00'
+    price: 90.00
     period: '年付'
+    billingCycle: 'yearly'
     isLimited: true
     refundable: false
   - name: '极速版'
-    price: '￥25.00'
+    price: 25.00
     period: '月付'
+    billingCycle: 'monthly'
     isLimited: true
     refundable: false
 speedTests:

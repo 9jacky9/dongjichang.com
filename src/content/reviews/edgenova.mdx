@@ -18,22 +18,29 @@ pros:
 cons:
   - '限时月付暂不参加优惠活动'
 targetAudience:
+
   - "短视频刷流"
   - "Netflix追剧"
+scenes:
+  - 'budget'
+  - 'streaming-hq'
 pricing:
   - name: '限时体验月付小包'
-    price: '￥15.00'
+    price: 15.00
     period: '月付'
+    billingCycle: 'monthly'
     isLimited: true
     refundable: false
   - name: '限时年付'
-    price: '￥108.00'
+    price: 108.00
     period: '年付'
+    billingCycle: 'yearly'
     isLimited: true
     refundable: false
   - name: '极界·标准套餐'
-    price: '￥25.00'
+    price: 25.00
     period: '月付'
+    billingCycle: 'monthly'
     isLimited: true
     refundable: false
 speedTests:

@@ -19,22 +19,30 @@ pros:
 cons:
   - '特殊商品不支持退款'
 targetAudience:
+
   - "下载党"
   - "4K视频用户"
+scenes:
+  - 'budget'
+  - 'heavy-traffic'
+  - 'streaming-hq'
 pricing:
   - name: '光速云·轻量版'
-    price: '￥99.00'
+    price: 99.00
     period: '年付'
+    billingCycle: 'yearly'
     isLimited: true
     refundable: false
   - name: '光速云·极速版'
-    price: '￥17.00'
+    price: 17.00
     period: '月付'
+    billingCycle: 'monthly'
     isLimited: true
     refundable: false
   - name: '光速云·流光版'
-    price: '￥34.00'
+    price: 34.00
     period: '月付'
+    billingCycle: 'monthly'
     isLimited: true
     refundable: false
 speedTests:

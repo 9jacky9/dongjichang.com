@@ -18,22 +18,29 @@ pros:
 cons:
   - '部分小套餐流量偏低'
 targetAudience:
+
   - "常规用户"
   - "不折腾群体"
+scenes:
+  - 'heavy-traffic'
+  - 'streaming-hq'
 pricing:
   - name: '森狸年付小套餐'
-    price: '￥120.00'
+    price: 120.00
     period: '年付'
+    billingCycle: 'yearly'
     isLimited: true
     refundable: false
   - name: '月狸月付小套餐'
-    price: '￥15.00'
+    price: 15.00
     period: '月付'
+    billingCycle: 'monthly'
     isLimited: true
     refundable: false
   - name: '小狸基础版'
-    price: '￥22.00'
+    price: 22.00
     period: '月付'
+    billingCycle: 'monthly'
     isLimited: true
     refundable: false
 speedTests:

@@ -33,7 +33,10 @@ const sortedReviews = allReviews.sort((a, b) => b.data.rating.overall - a.data.r
                 <div>
                   <h3 class="text-xl font-bold text-[var(--text-color)] group-hover:text-primary-500 transition-colors mb-1">{review.data.name}</h3>
                   <div class="text-xs text-[var(--text-color)]/60 bg-[var(--bg-color)] px-2 py-1 rounded inline-block">
-                    {review.data.pricing?.[0]?.price || '未知'}/起
+                    {(() => {
+                      const mp = review.data.pricing?.find(p => p.billingCycle === 'monthly');
+                      return mp ? `￥${mp.price}/月起` : (review.data.pricing?.length ? '该品牌无月付选项' : '未知');
+                    })()}
                   </div>
                 </div>
               </div>

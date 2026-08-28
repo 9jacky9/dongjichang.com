@@ -1,8 +1,9 @@
 ---
 interface PricingPlan {
   name: string;
-  price: string;
-  period: string;
+  price: number;
+  billingCycle: 'monthly' | 'quarterly' | 'yearly' | 'onetime';
+  period?: string;
   isLimited?: boolean;
   refundable?: boolean;
 }
@@ -38,8 +39,8 @@ const recommendedIndex = plans.length > 2 ? 1 : 0;
           )}
           <h4 class="text-lg font-semibold text-[var(--text-color)] mb-2">{plan.name}</h4>
           <div class="flex items-baseline gap-1 mb-4">
-            <span class="text-3xl font-bold text-accent-600 dark:text-accent-400">{plan.price}</span>
-            <span class="text-[var(--text-color)]/60 text-sm">/{plan.period}</span>
+            <span class="text-3xl font-bold text-accent-600 dark:text-accent-400">￥{plan.price}</span>
+            <span class="text-[var(--text-color)]/60 text-sm">/{plan.period || plan.billingCycle}</span>
           </div>
           
           <ul class="space-y-3 mb-8 flex-grow">

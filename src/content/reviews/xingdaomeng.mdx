@@ -19,22 +19,29 @@ pros:
 cons:
   - '小包套餐仅限年付'
 targetAudience:
+
   - "大流量用户"
   - "合租群体"
+scenes:
+  - 'heavy-traffic'
+  - 'streaming-hq'
 pricing:
   - name: '星岛梦·贴心小包'
-    price: '￥96.00'
+    price: 96.00
     period: '年付'
+    billingCycle: 'yearly'
     isLimited: true
     refundable: true
   - name: '星岛梦·超量150G'
-    price: '￥25.00'
+    price: 25.00
     period: '月付'
+    billingCycle: 'monthly'
     isLimited: true
     refundable: true
   - name: '星岛梦·进阶300G'
-    price: '￥50.00'
+    price: 50.00
     period: '月付'
+    billingCycle: 'monthly'
     isLimited: true
     refundable: true
 speedTests:

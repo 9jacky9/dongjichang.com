@@ -9,11 +9,11 @@ import CTAButton from '../../components/CTAButton.astro';
 import FAQAccordion from '../../components/FAQAccordion.astro';
 import SpeedTestGallery from '../../components/SpeedTestGallery.astro';
 
-// Dummy Data
-const dummyPlans = [
-  { name: '基础套餐', price: '￥15', period: '月付', refundable: false },
-  { name: '标准套餐', price: '￥25', period: '月付', refundable: true },
-  { name: '特惠年付', price: '￥199', period: '年付', isLimited: true, refundable: false },
+// Dummy data for components
+const dummyPlans: any[] = [
+  { name: '基础版', price: 15, period: '月付', billingCycle: 'monthly', refundable: true },
+  { name: '进阶版', price: 25, period: '月付', billingCycle: 'monthly', isLimited: true, refundable: true },
+  { name: '年付特惠', price: 200, period: '年付', billingCycle: 'yearly', refundable: false }
 ];
 
 const dummyBrands = [

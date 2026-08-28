@@ -20,22 +20,29 @@ cons:
   - '不接受退款服务'
   - '福建新疆谨慎下单'
 targetAudience:
+
   - "性价比导向"
   - "不限设备需求"
+scenes:
+  - 'budget'
+  - 'streaming-hq'
 pricing:
   - name: '限时年付套餐体验'
-    price: '￥96.00'
+    price: 96.00
     period: '年付'
+    billingCycle: 'yearly'
     isLimited: true
     refundable: false
   - name: '极连云·基础套餐'
-    price: '￥18.00'
+    price: 18.00
     period: '月付'
+    billingCycle: 'monthly'
     isLimited: true
     refundable: false
   - name: '极连云·进阶套餐'
-    price: '￥32.00'
+    price: 32.00
     period: '月付'
+    billingCycle: 'monthly'
     isLimited: true
     refundable: false
 speedTests:
