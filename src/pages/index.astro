@@ -65,6 +65,11 @@ const getFeatureIcon = (pro: string) => {
 >
   <!-- Hero Section -->
   <div class="relative bg-[var(--bg-color)] overflow-hidden border-b border-[var(--border-color)]">
+    <!-- Hero Illustration Background -->
+    <div class="absolute inset-y-0 right-0 w-full lg:w-3/5 opacity-15 pointer-events-none overflow-hidden flex justify-end">
+      <img src="/hero_global_nodes.jpg" alt="Global Nodes Radar" class="h-full w-auto object-cover object-right mix-blend-screen" style="-webkit-mask-image: linear-gradient(to right, transparent, black 30%); mask-image: linear-gradient(to right, transparent, black 30%);" />
+    </div>
+
     <div class="container mx-auto px-4 py-20 md:py-28 relative z-10 text-center max-w-4xl">
       <h1 class="text-5xl md:text-6xl font-bold mb-6 tracking-tight text-[var(--text-color)]">
         懂机场，<span class="text-primary-600 dark:text-primary-400">少踩坑</span>
@@ -87,19 +92,22 @@ const getFeatureIcon = (pro: string) => {
         <div class="mb-16 relative z-10">
           <h3 class="text-sm font-bold text-[var(--text-color)]/50 uppercase tracking-widest mb-6">编辑严选</h3>
           <div class="flex flex-wrap justify-center gap-4 md:gap-6">
-            {featuredReviews.map((review, i) => (
-              <a href={`/reviews/${review.id}`} class={`flex items-center gap-3 bg-[var(--card-bg)] border border-[var(--border-color)] hover:border-primary-400 p-3 pr-5 rounded-full shadow-sm hover:shadow-md transition-all ${i % 2 === 1 ? 'md:translate-y-4' : ''}`}>
-                <div class="w-10 h-10 rounded-full overflow-hidden bg-[var(--bg-color)] border border-[var(--border-color)] p-1 shrink-0">
-                  <div class="w-full h-full bg-primary-500 text-white flex items-center justify-center font-bold text-xl uppercase rounded-xl">
-  {review.data.name.charAt(0)}
-</div>
+            {featuredReviews.map((review, i) => {
+              const borderColors = ['border-primary-400', 'border-accent-400', 'border-blue-400', 'border-green-400'];
+              const borderColor = borderColors[i % borderColors.length];
+              return (
+              <a href={`/reviews/${review.id}`} class={`flex items-center gap-4 bg-[var(--card-bg)] border ${borderColor} hover:border-primary-500 p-4 pr-6 rounded-2xl shadow-sm hover:shadow-lg transition-all hover:-translate-y-1 ${i % 2 === 1 ? 'md:translate-y-4 hover:translate-y-3' : ''}`}>
+                <div class="w-14 h-14 rounded-xl overflow-hidden bg-[var(--bg-color)] border border-[var(--border-color)] p-1.5 shrink-0 shadow-sm">
+                  <div class="w-full h-full bg-primary-500 text-white flex items-center justify-center font-bold text-2xl uppercase rounded-lg">
+                    {review.data.name.charAt(0)}
+                  </div>
                 </div>
-                <div class="text-left">
-                  <div class="font-bold text-[var(--text-color)] text-sm">{review.data.name}</div>
-                  <div class="text-xs text-[var(--text-color)]/60 line-clamp-1 max-w-[140px] md:max-w-[180px]">{review.data.dongSays}</div>
+                <div class="text-left flex flex-col justify-center">
+                  <div class="font-bold text-[var(--text-color)] text-base mb-1">{review.data.name}</div>
+                  <div class="text-sm text-[var(--text-color)]/70 line-clamp-1 max-w-[180px] md:max-w-[220px]">{review.data.dongSays}</div>
                 </div>
               </a>
-            ))}
+            )})}
           </div>
         </div>
       )}
@@ -190,6 +198,35 @@ const getFeatureIcon = (pro: string) => {
             </div>
           </a>
         )})}
+      </div>
+    </section>
+
+    <!-- Scenes Entry -->
+    <section class="mb-20">
+      <div class="flex items-center justify-between mb-8">
+        <h2 class="text-3xl font-bold text-[var(--text-color)]">按场景找机场</h2>
+        <a href="/best" class="text-primary-600 dark:text-primary-400 font-medium hover:underline flex items-center gap-1">
+          全场景榜单 <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+        </a>
+      </div>
+      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+        {[
+          { id: 'stable', title: '稳定优先', icon: 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z', color: 'text-blue-500', bg: 'bg-blue-50 dark:bg-blue-900/20', border: 'hover:border-blue-500' },
+          { id: 'budget', title: '极致便宜', icon: 'M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z', color: 'text-green-500', bg: 'bg-green-50 dark:bg-green-900/20', border: 'hover:border-green-500' },
+          { id: 'heavy-traffic', title: '大流量', icon: 'M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12', color: 'text-orange-500', bg: 'bg-orange-50 dark:bg-orange-900/20', border: 'hover:border-orange-500' },
+          { id: 'ai-power', title: 'AI重度', icon: 'M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z', color: 'text-purple-500', bg: 'bg-purple-50 dark:bg-purple-900/20', border: 'hover:border-purple-500' },
+          { id: 'streaming-hq', title: '流媒体', icon: 'M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z M21 12a9 9 0 11-18 0 9 9 0 0118 0z', color: 'text-pink-500', bg: 'bg-pink-50 dark:bg-pink-900/20', border: 'hover:border-pink-500' },
+          { id: 'beginner', title: '新手友好', icon: 'M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z', color: 'text-teal-500', bg: 'bg-teal-50 dark:bg-teal-900/20', border: 'hover:border-teal-500' }
+        ].map(scene => (
+          <a href={`/best/${scene.id}`} class={`flex flex-col items-center justify-center p-6 bg-[var(--card-bg)] border border-[var(--border-color)] rounded-2xl ${scene.border} hover:shadow-md transition-all group hover:-translate-y-1`}>
+            <div class={`w-12 h-12 rounded-full ${scene.bg} ${scene.color} flex items-center justify-center mb-3 group-hover:scale-110 transition-transform`}>
+              <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d={scene.icon}></path>
+              </svg>
+            </div>
+            <span class="font-bold text-[var(--text-color)] text-sm">{scene.title}</span>
+          </a>
+        ))}
       </div>
     </section>
 
