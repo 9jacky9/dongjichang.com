@@ -29,7 +29,7 @@ const reviewsCollection = defineCollection({
     scenes: z.array(z.enum([
       'stable', 'budget', 'heavy-traffic', 'ai-power', 'streaming-hq', 'beginner', 'balanced'
     ])).default([]),
-    featured: z.boolean().default(false),
+
     featuredNote: z.string().optional(),
 
     // 套餐信息 (optional for now, as images/details are pending)
