@@ -90,7 +90,9 @@ const getFeatureIcon = (pro: string) => {
             {featuredReviews.map((review, i) => (
               <a href={`/reviews/${review.id}`} class={`flex items-center gap-3 bg-[var(--card-bg)] border border-[var(--border-color)] hover:border-primary-400 p-3 pr-5 rounded-full shadow-sm hover:shadow-md transition-all ${i % 2 === 1 ? 'md:translate-y-4' : ''}`}>
                 <div class="w-10 h-10 rounded-full overflow-hidden bg-[var(--bg-color)] border border-[var(--border-color)] p-1 shrink-0">
-                  <img src={`/src/assets/brands/${review.id}.svg`} alt={review.data.name} class="w-full h-full object-contain" />
+                  <div class="w-full h-full bg-primary-500 text-white flex items-center justify-center font-bold text-xl uppercase rounded-xl">
+  {review.data.name.charAt(0)}
+</div>
                 </div>
                 <div class="text-left">
                   <div class="font-bold text-[var(--text-color)] text-sm">{review.data.name}</div>
@@ -150,7 +152,9 @@ const getFeatureIcon = (pro: string) => {
             <div class="p-6 flex-grow">
               <div class="flex justify-between items-start mb-4">
                 <div class="w-12 h-12 rounded-xl overflow-hidden bg-[var(--bg-color)] border border-[var(--border-color)] p-1.5 shadow-sm">
-                  <img src={`/src/assets/brands/${review.id}.svg`} alt={`${review.data.name} Logo`} class="w-full h-full object-contain rounded-lg" />
+                  <div class="w-full h-full  rounded-lg bg-primary-500 text-white flex items-center justify-center font-bold text-xl uppercase rounded-xl">
+  {review.data.name.charAt(0)}
+</div>
                 </div>
                 <RatingBadge score={review.data.rating.overall} size="sm" />
               </div>

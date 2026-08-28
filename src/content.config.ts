@@ -44,10 +44,13 @@ const reviewsCollection = defineCollection({
 
     // 测速数据 (optional for now)
     speedTests: z.array(z.object({
-      region: z.string(), // e.g., "广东移动"
-      image: image().optional(), // using Astro's built-in image helper
-      date: z.date(),
-      conclusion: z.string(),
+      region: z.string(),
+      nodeCount: z.number(),
+      avgLatencyMs: z.number(),
+      avgSpeedMbps: z.number(),
+      maxSpeedMbps: z.number().optional(),
+      testDate: z.date(),
+      note: z.string().optional()
     })).optional(),
 
     // FAQ

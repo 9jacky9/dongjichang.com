@@ -28,9 +28,9 @@ const dummyFaqs = [
 ];
 
 const dummyTests = [
-  { region: '广东移动', date: new Date(), conclusion: '速度极快，晚高峰无压力', image: undefined },
-  { region: '北京联通', date: new Date(), conclusion: '稳定无丢包，延迟低', image: undefined },
-  { region: '上海电信', date: new Date(), conclusion: '偶尔波动，整体可用', image: undefined },
+  { region: '广东移动', nodeCount: 5, avgLatencyMs: 45, avgSpeedMbps: 680, maxSpeedMbps: 900, testDate: new Date(), note: '全绿无丢包' },
+  { region: '北京联通', nodeCount: 3, avgLatencyMs: 120, avgSpeedMbps: 450, testDate: new Date(), note: '高峰期有轻微波动' },
+  { region: '上海电信', nodeCount: 4, avgLatencyMs: 65, avgSpeedMbps: 550, testDate: new Date() },
 ];
 ---
 

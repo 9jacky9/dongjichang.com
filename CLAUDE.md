@@ -60,3 +60,11 @@ Consult these guides before working on related tasks:
 
 ### 旧主题残留清理
 - 每次改动 UI 相关代码前，先搜索是否还有 `cyber` 等旧版靛紫主题的类名残留（比如 `cyber-glow`），不能再使用这类类名，因为现在的设计风格是暖橙简约卡片风。
+
+### 测速数据字段格式锁定（反复被改回旧结构，这次锁死）
+- `speedTests` 字段的结构固定为：`region`(string) / `nodeCount`(number) / `avgLatencyMs`(number) / `avgSpeedMbps`(number) / `maxSpeedMbps`(number, optional) / `testDate`(date) / `note`(string, optional)。
+- 不允许改回 `image`/`date`/`conclusion` 这种旧结构，也不允许引入任何"占位图/占位文字框"的展示方式（比如 `[测速截图: xxx]` 这种文字占位符），一律通过真实数据渲染图表组件。
+- 再次强调：没有真实截图分析支撑的 `speedTests` 数据，一律留空，"多地区节点"、"延迟极低"这类模糊表述本身就是编造的信号词，看到类似写法要重新检查数据来源。
+
+### Astro 资源路径规则
+- `src/assets/` 目录下的图片必须通过 Astro 的 `<Image>` 组件或 `import` 方式引入使用，不能直接在 `<img src="/src/assets/...">` 里硬编码路径——这个路径在生产构建后是无效的，会导致图裂。真正需要通过纯 URL 字符串引用的静态资源，放在 `public/` 目录下。

@@ -79,7 +79,9 @@ const structuredData = {
     <header class="mb-12 flex flex-col md:flex-row gap-8 items-start">
       <div class="w-24 h-24 shrink-0 rounded-2xl overflow-hidden shadow-sm bg-[var(--card-bg)] border border-[var(--border-color)] p-1">
         <!-- SVG Placeholder mapping based on brand name for now, normally use image() -->
-        <img src={`/src/assets/brands/${review.id}.svg`} alt={`${data.name} Logo`} class="w-full h-full object-cover rounded-xl" />
+        <div class="w-full h-full  rounded-xl bg-primary-500 text-white flex items-center justify-center font-bold text-xl uppercase rounded-xl">
+  {review.data.name.charAt(0)}
+</div>
       </div>
       
       <div class="flex-grow">

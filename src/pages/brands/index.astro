@@ -28,7 +28,9 @@ const sortedReviews = allReviews.sort((a, b) => b.data.rating.overall - a.data.r
             <div class="flex justify-between items-start mb-6">
               <div class="flex items-center gap-4">
                 <div class="w-14 h-14 rounded-xl overflow-hidden bg-[var(--bg-color)] border border-[var(--border-color)] p-1 shrink-0">
-                  <img src={`/src/assets/brands/${review.id}.svg`} alt={`${review.data.name} Logo`} class="w-full h-full object-cover rounded-lg" />
+                  <div class="w-full h-full  rounded-lg bg-primary-500 text-white flex items-center justify-center font-bold text-xl uppercase rounded-xl">
+  {review.data.name.charAt(0)}
+</div>
                 </div>
                 <div>
                   <h3 class="text-xl font-bold text-[var(--text-color)] group-hover:text-primary-500 transition-colors mb-1">{review.data.name}</h3>
