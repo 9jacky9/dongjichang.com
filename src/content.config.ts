@@ -68,10 +68,11 @@ const reviewsCollection = defineCollection({
 });
 
 const blogCollection = defineCollection({
-  loader: glob({ pattern: '**/*.mdx', base: "./src/content/blog" }),
-  schema: () => z.object({
+  loader: glob({ pattern: '**/*.{md,mdx}', base: "./src/content/blog" }),
+  schema: ({ image }) => z.object({
     title: z.string(),
     description: z.string(),
+    coverImage: image().optional(),
     publishDate: z.date(),
     updatedDate: z.date().optional(),
     keywords: z.array(z.string()),
