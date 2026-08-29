@@ -1,4 +1,6 @@
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
+@custom-variant dark (&:is(.dark *));
 
 @theme {
   --color-primary-50: #fff7ed;
@@ -11,6 +13,17 @@
   --color-primary-700: #c2410c;
   --color-primary-800: #9a3412;
   --color-primary-900: #7c2d12;
+  
+  --color-accent-50: var(--color-primary-50);
+  --color-accent-100: var(--color-primary-100);
+  --color-accent-200: var(--color-primary-200);
+  --color-accent-300: var(--color-primary-300);
+  --color-accent-400: var(--color-primary-400);
+  --color-accent-500: var(--color-primary-500);
+  --color-accent-600: var(--color-primary-600);
+  --color-accent-700: var(--color-primary-700);
+  --color-accent-800: var(--color-primary-800);
+  --color-accent-900: var(--color-primary-900);
   
   --color-cloud-50: #fafafa;
   --color-cloud-100: #f4f4f5;
@@ -56,3 +69,24 @@
     letter-spacing: -0.02em;
   }
 }
+
+@layer components {
+  .prose p {
+    margin-bottom: 1.75rem;
+    line-height: 1.9;
+  }
+}
+
+  .prose h3 {
+    margin-top: 3rem !important;
+    margin-bottom: 1.25rem !important;
+    font-size: 1.3rem !important;
+    font-weight: 700 !important;
+  }
+  .prose h4 {
+    margin-top: 2rem !important;
+    margin-bottom: 1rem !important;
+    font-size: 1.15rem !important;
+    font-weight: 700 !important;
+  }
+

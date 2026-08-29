@@ -8,23 +8,24 @@ const { pros, cons } = Astro.props;
 ---
 
 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 my-8">
-  <div class="bg-success/5 border border-success/20 rounded-xl p-6">
-    <h4 class="flex items-center gap-2 text-lg font-bold text-success mb-4">
-      <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5"></path></svg>
-      优点 (Pros)
+  <div class="relative bg-gradient-to-br from-primary-50/80 to-[var(--card-bg)] dark:from-primary-900/20 dark:to-[var(--card-bg)] border border-primary-200 dark:border-primary-800/50 rounded-2xl p-6 shadow-sm overflow-hidden">
+    <div class="absolute top-0 right-0 w-32 h-32 bg-primary-500/10 rounded-full blur-3xl -mr-10 -mt-10 pointer-events-none"></div>
+    <h4 class="flex items-center gap-2 text-xl font-bold text-primary-600 dark:text-primary-400 mb-5 relative z-10">
+      <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+      核心亮点
     </h4>
     <ul class="space-y-3">
       {pros.map(item => (
-        <li class="flex items-start gap-3">
-          <svg class="w-5 h-5 text-success shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+        <li class="flex items-start gap-3 relative z-10">
+          <svg class="w-5 h-5 text-primary-500 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
           <span class="text-[var(--text-color)]/90 leading-relaxed">{item}</span>
         </li>
       ))}
     </ul>
   </div>
 
-  <div class="bg-error/5 border border-error/20 rounded-xl p-6">
-    <h4 class="flex items-center gap-2 text-lg font-bold text-error mb-4">
+  <div class="bg-[var(--card-bg)] border border-[var(--border-color)] rounded-2xl p-6 shadow-sm">
+    <h4 class="flex items-center gap-2 text-lg font-bold text-error mb-5">
       <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14H5.236a2 2 0 01-1.789-2.894l3.5-7A2 2 0 018.736 3h4.018a2 2 0 01.485.06l3.76.94m-7 10v5a2 2 0 002 2h.096c.5 0 .905-.405.905-.904 0-.714.211-1.412.608-2.006L17 13V4m-7 10h2m5-10h2a2 2 0 012 2v6a2 2 0 01-2 2h-2.5"></path></svg>
       缺点 (Cons)
     </h4>

@@ -1,14 +1,21 @@
 ---
 import { getCollection, render } from 'astro:content';
+import { Image } from 'astro:assets';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import RatingBadge from '../../components/RatingBadge.astro';
 import PricingTable from '../../components/PricingTable.astro';
 import ProsConsList from '../../components/ProsConsList.astro';
 import CouponCode from '../../components/CouponCode.astro';
 import CTAButton from '../../components/CTAButton.astro';
-import SpeedTestGallery from '../../components/SpeedTestGallery.astro';
+import SpeedTestChart from '../../components/SpeedTestChart.astro';
 import FAQAccordion from '../../components/FAQAccordion.astro';
 import DongSays from '../../components/DongSays.astro';
+import SpecsCard from '../../components/SpecsCard.astro';
+
+const brandLogos = import.meta.glob<{ default: ImageMetadata }>('../../assets/brands/*.{svg,png,jpg}', { eager: true });
+const getBrandLogo = (id: string) => {
+  return brandLogos[`../../assets/brands/${id}.svg`]?.default || brandLogos[`../../assets/brands/${id}.png`]?.default || brandLogos[`../../assets/brands/${id}.jpg`]?.default;
+};
 
 export async function getStaticPaths() {
   const reviews = await getCollection('reviews');
@@ -77,11 +84,14 @@ const structuredData = {
 
     <!-- Header Section -->
     <header class="mb-12 flex flex-col md:flex-row gap-8 items-start">
-      <div class="w-24 h-24 shrink-0 rounded-2xl overflow-hidden shadow-sm bg-[var(--card-bg)] border border-[var(--border-color)] p-1">
-        <!-- SVG Placeholder mapping based on brand name for now, normally use image() -->
-        <div class="w-full h-full  rounded-xl bg-primary-500 text-white flex items-center justify-center font-bold text-xl uppercase rounded-xl">
-  {review.data.name.charAt(0)}
-</div>
+      <div class="w-24 h-24 shrink-0 rounded-2xl overflow-hidden shadow-sm bg-[var(--card-bg)] border border-[var(--border-color)] p-2 flex items-center justify-center">
+        {getBrandLogo(review.id) ? (
+          <Image src={getBrandLogo(review.id)!} alt={review.data.name} class="w-full h-full object-contain" />
+        ) : (
+          <div class="w-full h-full rounded-xl bg-primary-500 text-white flex items-center justify-center font-bold text-3xl uppercase">
+            {review.data.name.charAt(0)}
+          </div>
+        )}
       </div>
       
       <div class="flex-grow">
@@ -108,6 +118,14 @@ const structuredData = {
     <!-- Pros & Cons -->
     <ProsConsList pros={data.pros} cons={data.cons} />
 
+    <!-- Specs Card (Graphical representation of protocol, audience, etc.) -->
+    <SpecsCard 
+      protocol={data.protocol} 
+      targetAudience={data.targetAudience} 
+      scenes={data.scenes} 
+      regionCount={data.speedTests ? new Set(data.speedTests.map(t => t.region)).size : undefined} 
+    />
+
     <!-- Content (MDX Render) -->
     <article class="prose dark:prose-invert prose-primary max-w-none my-12">
       <Content />
@@ -120,7 +138,7 @@ const structuredData = {
 
     <!-- Speed Tests -->
     {data.speedTests && data.speedTests.length > 0 && (
-      <SpeedTestGallery tests={data.speedTests} brandName={data.name} />
+      <SpeedTestChart data={data.speedTests} />
     )}
 
     <!-- FAQ -->

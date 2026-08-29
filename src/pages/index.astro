@@ -1,11 +1,19 @@
 ---
 import { getCollection } from 'astro:content';
+import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import CompareTable from '../components/CompareTable.astro';
 import FAQAccordion from '../components/FAQAccordion.astro';
 import RatingBadge from '../components/RatingBadge.astro';
+import heroIllustration from '../assets/hero_network_illustration.jpg';
 
 const allReviews = await getCollection('reviews');
+// Import all brand logos
+const brandLogos = import.meta.glob<{ default: ImageMetadata }>('../assets/brands/*.{svg,png,jpg}', { eager: true });
+const getBrandLogo = (id: string) => {
+  return brandLogos[`../assets/brands/${id}.svg`]?.default || brandLogos[`../assets/brands/${id}.png`]?.default || brandLogos[`../assets/brands/${id}.jpg`]?.default;
+};
+
 // Sort by rating or just take the first 4 for the 'Top 4' list
 const topReviews = allReviews.sort((a, b) => b.data.rating.overall - a.data.rating.overall).slice(0, 4);
 const featuredReviews = allReviews.filter(r => r.data.featured).sort((a, b) => b.data.rating.overall - a.data.rating.overall).slice(0, 4);
@@ -67,7 +75,7 @@ const getFeatureIcon = (pro: string) => {
   <div class="relative bg-[var(--bg-color)] overflow-hidden border-b border-[var(--border-color)]">
     <!-- Hero Illustration Background -->
     <div class="absolute inset-y-0 right-0 w-full lg:w-3/5 opacity-15 pointer-events-none overflow-hidden flex justify-end">
-      <img src="/hero_global_nodes.jpg" alt="Global Nodes Radar" class="h-full w-auto object-cover object-right mix-blend-screen" style="-webkit-mask-image: linear-gradient(to right, transparent, black 30%); mask-image: linear-gradient(to right, transparent, black 30%);" />
+      <Image src={heroIllustration} alt="Global Nodes Radar" class="h-full w-auto object-cover object-right mix-blend-screen" style="-webkit-mask-image: linear-gradient(to right, transparent, black 30%); mask-image: linear-gradient(to right, transparent, black 30%);" />
     </div>
 
     <div class="container mx-auto px-4 py-20 md:py-28 relative z-10 text-center max-w-4xl">
@@ -96,14 +104,18 @@ const getFeatureIcon = (pro: string) => {
               const borderColors = ['border-primary-400', 'border-accent-400', 'border-blue-400', 'border-green-400'];
               const borderColor = borderColors[i % borderColors.length];
               return (
-              <a href={`/reviews/${review.id}`} class={`flex items-center gap-4 bg-[var(--card-bg)] border ${borderColor} hover:border-primary-500 p-4 pr-6 rounded-2xl shadow-sm hover:shadow-lg transition-all hover:-translate-y-1 ${i % 2 === 1 ? 'md:translate-y-4 hover:translate-y-3' : ''}`}>
-                <div class="w-14 h-14 rounded-xl overflow-hidden bg-[var(--bg-color)] border border-[var(--border-color)] p-1.5 shrink-0 shadow-sm">
-                  <div class="w-full h-full bg-primary-500 text-white flex items-center justify-center font-bold text-2xl uppercase rounded-lg">
-                    {review.data.name.charAt(0)}
-                  </div>
+              <a href={`/reviews/${review.id}`} class={`flex items-center gap-4 bg-[var(--card-bg)] border ${borderColor} hover:border-primary-500 p-5 pr-6 rounded-2xl shadow-sm hover:shadow-lg transition-all hover:-translate-y-1 ${i % 2 === 1 ? 'md:translate-y-4 hover:translate-y-3' : ''}`}>
+                <div class="w-16 h-16 rounded-xl overflow-hidden bg-[var(--bg-color)] border border-[var(--border-color)] p-2 shrink-0 shadow-sm flex items-center justify-center">
+                  {getBrandLogo(review.id) ? (
+                    <Image src={getBrandLogo(review.id)!} alt={review.data.name} class="w-full h-full object-contain" />
+                  ) : (
+                    <div class="w-full h-full bg-primary-500 text-white flex items-center justify-center font-bold text-2xl uppercase rounded-lg">
+                      {review.data.name.charAt(0)}
+                    </div>
+                  )}
                 </div>
                 <div class="text-left flex flex-col justify-center">
-                  <div class="font-bold text-[var(--text-color)] text-base mb-1">{review.data.name}</div>
+                  <div class="font-bold text-[var(--text-color)] text-lg mb-1">{review.data.name}</div>
                   <div class="text-sm text-[var(--text-color)]/70 line-clamp-1 max-w-[180px] md:max-w-[220px]">{review.data.dongSays}</div>
                 </div>
               </a>
@@ -159,10 +171,14 @@ const getFeatureIcon = (pro: string) => {
           <a href={`/reviews/${review.id}`} class="group flex flex-col bg-[var(--card-bg)] border border-[var(--border-color)] rounded-2xl overflow-hidden hover:border-primary-500 hover:shadow-[0_0_20px_rgba(232,115,74,0.15)] transition-all">
             <div class="p-6 flex-grow">
               <div class="flex justify-between items-start mb-4">
-                <div class="w-12 h-12 rounded-xl overflow-hidden bg-[var(--bg-color)] border border-[var(--border-color)] p-1.5 shadow-sm">
-                  <div class="w-full h-full  rounded-lg bg-primary-500 text-white flex items-center justify-center font-bold text-xl uppercase rounded-xl">
-  {review.data.name.charAt(0)}
-</div>
+                <div class="w-12 h-12 rounded-xl overflow-hidden bg-[var(--bg-color)] border border-[var(--border-color)] p-1.5 shadow-sm flex items-center justify-center">
+                  {getBrandLogo(review.id) ? (
+                    <Image src={getBrandLogo(review.id)!} alt={review.data.name} class="w-full h-full object-contain" />
+                  ) : (
+                    <div class="w-full h-full rounded-lg bg-primary-500 text-white flex items-center justify-center font-bold text-xl uppercase">
+                      {review.data.name.charAt(0)}
+                    </div>
+                  )}
                 </div>
                 <RatingBadge score={review.data.rating.overall} size="sm" />
               </div>

@@ -85,23 +85,27 @@ const relatedPosts = allPosts
       </aside>
 
       {/* Main Content */}
-      <div class="w-full lg:max-w-3xl lg:flex-1">
-        {post.data.coverImage && (
-          <div class="mb-10 rounded-2xl overflow-hidden shadow-sm border border-[var(--border-color)]">
-            <Image 
-              src={post.data.coverImage} 
-              alt={post.data.title} 
-              class="w-full h-auto aspect-video object-cover" 
-            />
-          </div>
-        )}
+      <div class="w-full lg:flex-1">
+        <div class="w-full max-w-2xl mx-auto">
+          {post.data.coverImage && (
+            <div class="mb-10 rounded-2xl overflow-hidden shadow-sm border border-[var(--border-color)]">
+              <Image 
+                src={post.data.coverImage} 
+                alt={post.data.title} 
+                class="w-full h-auto aspect-video object-cover" 
+              />
+            </div>
+          )}
 
-        <div class="prose prose-lg dark:prose-invert prose-primary max-w-none 
-          prose-headings:text-[var(--text-color)] prose-headings:font-bold 
-          prose-a:text-primary-600 dark:prose-a:text-primary-400 hover:prose-a:text-primary-500 
-          prose-img:rounded-2xl prose-img:border prose-img:border-[var(--border-color)] prose-img:shadow-sm
-          prose-blockquote:border-l-4 prose-blockquote:border-primary-500 prose-blockquote:bg-[var(--card-bg)] prose-blockquote:py-2 prose-blockquote:px-6 prose-blockquote:rounded-r-xl prose-blockquote:shadow-sm prose-blockquote:not-italic
-        ">
+          <div class="prose prose-lg dark:prose-invert prose-primary max-w-none 
+            prose-headings:text-[var(--text-color)] prose-headings:font-bold 
+            prose-h2:text-2xl md:prose-h2:text-3xl prose-h2:font-bold prose-h2:mt-14 prose-h2:mb-6 prose-h2:border-l-4 prose-h2:border-primary-500 prose-h2:pl-3 prose-h2:leading-snug
+            prose-h3:text-xl md:prose-h3:text-2xl prose-h3:mt-12 prose-h3:mb-4
+            prose-h4:text-lg prose-h4:mt-8 prose-h4:mb-4
+            prose-a:text-primary-600 dark:prose-a:text-primary-400 hover:prose-a:text-primary-500 
+            prose-img:rounded-2xl prose-img:border prose-img:border-[var(--border-color)] prose-img:shadow-sm
+            prose-blockquote:border-l-4 prose-blockquote:border-primary-500 prose-blockquote:bg-[var(--card-bg)] prose-blockquote:py-2 prose-blockquote:px-6 prose-blockquote:rounded-r-xl prose-blockquote:shadow-sm prose-blockquote:not-italic
+          ">
           {/* Mobile TOC */}
           {toc.length > 0 && (
             <div class="lg:hidden mb-8 bg-[var(--card-bg)] border border-[var(--border-color)] p-6 rounded-2xl">
@@ -160,6 +164,7 @@ const relatedPosts = allPosts
             </div>
           )}
 
+        </div>
         </div>
       </div>
       

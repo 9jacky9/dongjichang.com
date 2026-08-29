@@ -1,0 +1,78 @@
+---
+interface Props {
+  protocol?: string;
+  targetAudience?: string[];
+  scenes?: string[];
+  regionCount?: number;
+}
+
+const { protocol, targetAudience = [], scenes = [], regionCount } = Astro.props;
+
+const sceneTitles: Record<string, string> = {
+  'stable': '稳定优先',
+  'budget': '极致便宜',
+  'heavy-traffic': '大流量',
+  'ai-power': 'AI 重度',
+  'streaming-hq': '流媒体',
+  'beginner': '新手友好',
+  'balanced': '均衡综合'
+};
+---
+
+<div class="bg-[var(--card-bg)] border border-[var(--border-color)] rounded-2xl p-6 mb-8 shadow-sm">
+  <h2 class="text-lg font-bold text-[var(--text-color)] mb-4 flex items-center gap-2">
+    <svg class="w-5 h-5 text-primary-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+    </svg>
+    快速了解
+  </h2>
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+    <!-- Protocol -->
+    <div class="flex flex-col gap-1 p-3 rounded-xl bg-[var(--bg-color)] border border-[var(--border-color)]">
+      <span class="text-xs text-[var(--text-color)]/60 font-medium flex items-center gap-1.5">
+        <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+        主流协议
+      </span>
+      <span class="font-bold text-[var(--text-color)] text-sm">{protocol || '未公开'}</span>
+    </div>
+
+    <!-- Target Audience -->
+    <div class="flex flex-col gap-1 p-3 rounded-xl bg-[var(--bg-color)] border border-[var(--border-color)]">
+      <span class="text-xs text-[var(--text-color)]/60 font-medium flex items-center gap-1.5">
+        <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+        目标人群
+      </span>
+      <div class="flex flex-wrap gap-1 mt-0.5">
+        {targetAudience.slice(0, 2).map(aud => (
+          <span class="text-[10px] bg-primary-100 text-primary-700 dark:bg-primary-900/30 dark:text-primary-300 px-1.5 py-0.5 rounded">{aud}</span>
+        ))}
+        {targetAudience.length === 0 && <span class="text-sm font-bold text-[var(--text-color)]">-</span>}
+      </div>
+    </div>
+
+    <!-- Scenes -->
+    <div class="flex flex-col gap-1 p-3 rounded-xl bg-[var(--bg-color)] border border-[var(--border-color)]">
+      <span class="text-xs text-[var(--text-color)]/60 font-medium flex items-center gap-1.5">
+        <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path></svg>
+        擅长场景
+      </span>
+      <div class="flex flex-wrap gap-1 mt-0.5">
+        {scenes.slice(0, 2).map(scene => (
+          <span class="text-[10px] bg-accent-100 text-accent-700 dark:bg-accent-900/30 dark:text-accent-300 px-1.5 py-0.5 rounded">{sceneTitles[scene] || scene}</span>
+        ))}
+        {scenes.length === 0 && <span class="text-sm font-bold text-[var(--text-color)]">-</span>}
+      </div>
+    </div>
+
+    <!-- Region Coverage -->
+    <div class="flex flex-col gap-1 p-3 rounded-xl bg-[var(--bg-color)] border border-[var(--border-color)]">
+      <span class="text-xs text-[var(--text-color)]/60 font-medium flex items-center gap-1.5">
+        <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+        地区覆盖
+      </span>
+      <span class="font-bold text-[var(--text-color)] text-sm">
+        {regionCount !== undefined ? (regionCount > 0 ? `${regionCount} 个核心区域` : '未提供测速数据') : '待补充'}
+      </span>
+    </div>
+  </div>
+</div>

@@ -19,7 +19,6 @@ const compareBrands = allReviews.map(review => {
     price: price,
     protocol: review.data.protocol || '',
     link: review.data.affiliateLink,
-    regions: regions,
     tags: review.data.targetAudience || []
   };
 }).sort((a, b) => b.score - a.score);

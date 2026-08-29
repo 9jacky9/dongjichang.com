@@ -1,33 +1,151 @@
 ---
+import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import FAQAccordion from '../components/FAQAccordion.astro';
 
-const faqs = [
-  { question: "你们的评测是客观中立的吗？", answer: "是的。我们通过自费购买服务进行测试，绝不接受商家的“充值”删帖或人为调高评分。我们的盈利来源仅为用户通过我们的专属链接购买服务时产生的联盟佣金，但这不会影响我们的客观评价。" },
+const allReviews = await getCollection('reviews');
+const reviewFaqs = allReviews.map(r => r.data.faq || []).flat();
+
+const baseFaqs = [
+  { question: "你们的评测是客观中立的吗？", answer: "是的。我们通过自费购买服务进行测试，绝不接受商家的充值删帖或人为调高评分。我们的盈利来源仅为用户通过我们的专属链接购买服务时产生的佣金，但这不会影响我们的客观评价。" },
   { question: "为什么有些知名机场没有被收录？", answer: "我们的筛选标准非常严格。未被收录可能是因为：1. 运营时间不足半年，存在跑路风险；2. 我们在实测中发现其稳定性或速度不达标；3. 我们暂未完成对其的测试流程。" },
   { question: "数据多久更新一次？", answer: "我们的自动化测速节点每天会在晚高峰（20:00-24:00）进行抽测。评测文章的大版本更新（如套餐变动、线路大规模调整）通常每月进行一次复核。" },
-  { question: "通过你们的链接购买有什么好处？", answer: "通过我们的链接购买，您通常可以获得全网最低的专属优惠码折扣。同时，这也是对我们持续产出高质量评测内容的资金支持。" }
+  { question: "通过你们的链接购买有什么好处？", answer: "通过我们的链接购买，您通常可以获得全网最低的专属优惠码折扣。同时，这也是对我们持续产出高质量评测内容的资金支持。" },
+  { question: "新手应该如何选择代理服务？", answer: "建议首先明确您的需求：是注重看流媒体（Netflix/Disney+），还是注重晚高峰的稳定性（办公/游戏）。一般建议新手从月付开始尝试，避免一次性投入过多风险。" },
+  { question: "免费节点安全吗？", answer: "免费节点往往存在隐私泄露风险和不稳定的问题。如果您对数据安全有要求，建议选择付费的专业服务提供商，我们评测的均为运营半年以上的付费品牌。" },
+  { question: "什么是IEPL/IPLC专线？和普通节点有什么区别？", answer: "普通节点数据需经过公网，晚高峰容易拥堵和丢包；专线则是点对点内部传输，不受墙的干扰，延迟极低且稳定，非常适合游戏和对稳定性要求极高的用户。" },
+  { question: "横向对比的评分依据是什么？", answer: "我们的评分主要分为四个维度：速度（30%）、稳定性（30%）、性价比（20%）和售后服务（20%）。每一项得分均通过长达数周的实际测试和工单响应测试得出。" },
+  { question: "起步价格包含哪些服务？", answer: "通常指该服务商最基础的月付套餐。需要注意，最低价套餐可能存在设备数限制或流量较少的情况，具体详见深度评测内的套餐解析表。" }
 ];
+
+// De-duplicate based on questions
+const allFaqs = [...baseFaqs, ...reviewFaqs];
+const uniqueFaqsMap = new Map();
+allFaqs.forEach(faq => {
+  if (faq && faq.question && !uniqueFaqsMap.has(faq.question)) {
+    uniqueFaqsMap.set(faq.question, faq);
+  }
+});
+const uniqueFaqs = Array.from(uniqueFaqsMap.values());
 ---
 
 <BaseLayout 
   title="常见问题 (FAQ)" 
   description="关于本站评测标准与服务筛选的常见问题解答。"
 >
-  <div class="container mx-auto px-4 py-16 max-w-3xl">
+  <div class="container mx-auto px-4 py-16 max-w-4xl">
     <h1 class="text-4xl font-bold mb-8 text-[var(--text-color)] text-center">常见问题与解答</h1>
-    <div class="prose dark:prose-invert max-w-none mb-12 text-[var(--text-color)]/80 text-center">
-      <p>如果您对我们的评测流程、数据来源或网站运营有任何疑问，请参考以下解答。</p>
+    
+    <div class="max-w-2xl mx-auto mb-12">
+      <div class="relative w-full">
+        <input type="text" id="faq-search-input" placeholder="搜索您的问题..." class="w-full pl-12 pr-4 py-3 rounded-full border border-[var(--border-color)] bg-[var(--card-bg)] text-[var(--text-color)] focus:outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 text-md transition-shadow">
+        <svg class="w-5 h-5 absolute left-4 top-3.5 text-[var(--text-color)]/50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+      </div>
     </div>
     
-    <FAQAccordion faqs={faqs} />
-    
-    <div class="mt-16 p-8 bg-[var(--card-bg)] border border-[var(--border-color)] rounded-2xl text-center">
-      <h2 class="text-2xl font-bold mb-4 text-[var(--text-color)]">没有找到您的问题？</h2>
-      <p class="text-[var(--text-color)]/70 mb-6">欢迎通过邮件与我们取得联系，我们将尽快为您解答。</p>
-      <a href="mailto:contact@example.com" class="inline-block px-6 py-3 bg-accent-500 hover:bg-accent-600 text-white font-medium rounded-lg transition-colors">
-        联系我们
-      </a>
+    <div class="space-y-4" id="faq-container">
+      {uniqueFaqs.map((faq, index) => (
+        <details class="faq-item group bg-[var(--card-bg)] border border-[var(--border-color)] rounded-xl [&_summary::-webkit-details-marker]:hidden" data-question={faq.question.toLowerCase()} data-answer={faq.answer.toLowerCase()}>
+          <summary class="flex items-center justify-between cursor-pointer p-5 font-medium text-[var(--text-color)]">
+            <span class="text-lg">{faq.question}</span>
+            <span class="transition group-open:rotate-180 text-[var(--text-color)]/50 group-hover:text-primary-500">
+              <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+            </span>
+          </summary>
+          <div class="p-5 pt-0 text-[var(--text-color)]/80 leading-relaxed border-t border-transparent group-open:border-[var(--border-color)]">
+            <p class="pt-4">{faq.answer}</p>
+          </div>
+        </details>
+      ))}
+    </div>
+
+    <!-- No Results -->
+    <div id="no-results" class="hidden text-center py-12">
+      <div class="text-4xl mb-4 opacity-50">🔍</div>
+      <p class="text-[var(--text-color)]/60 text-lg font-medium">没有找到相关问题，请尝试其他关键词</p>
+    </div>
+
+    <!-- Pagination -->
+    <div class="flex justify-center flex-wrap mt-12 gap-2" id="pagination">
+      <!-- Generated by JS -->
     </div>
   </div>
 </BaseLayout>
+
+<script>
+  // @ts-nocheck
+  document.addEventListener('DOMContentLoaded', () => {
+    const PAGE_SIZE = 10;
+    const faqItems = Array.from(document.querySelectorAll('.faq-item'));
+    const searchInput = document.getElementById('faq-search-input');
+    const paginationContainer = document.getElementById('pagination');
+    const noResults = document.getElementById('no-results');
+
+    let currentSearch = '';
+    let currentPage = 1;
+
+    function render() {
+      let filtered = faqItems.filter(item => {
+        const question = item.getAttribute('data-question') || '';
+        const answer = item.getAttribute('data-answer') || '';
+        
+        const searchMatch = !currentSearch || question.includes(currentSearch) || answer.includes(currentSearch);
+        
+        return searchMatch;
+      });
+
+      const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
+      if (currentPage > totalPages) currentPage = Math.max(1, totalPages);
+
+      // Hide all first
+      faqItems.forEach(item => {
+        item.style.display = 'none';
+        item.removeAttribute('open'); // close accordion when paginating/searching
+      });
+
+      if (filtered.length === 0) {
+        noResults.classList.remove('hidden');
+        paginationContainer.innerHTML = '';
+        return;
+      } else {
+        noResults.classList.add('hidden');
+      }
+
+      // Show current page
+      const start = (currentPage - 1) * PAGE_SIZE;
+      const end = start + PAGE_SIZE;
+      filtered.slice(start, end).forEach((item, index) => {
+        item.style.display = 'block';
+        if(index === 0 && !currentSearch) {
+          item.setAttribute('open', ''); // open the first one on each page if not searching
+        }
+      });
+
+      // Render pagination buttons
+      paginationContainer.innerHTML = '';
+      if (totalPages > 1) {
+        for (let i = 1; i <= totalPages; i++) {
+          const btn = document.createElement('button');
+          btn.textContent = i.toString();
+          btn.className = `cursor-pointer w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold transition-all ${i === currentPage ? 'bg-primary-500 text-white shadow-md' : 'bg-[var(--card-bg)] text-[var(--text-color)] border border-[var(--border-color)] hover:bg-primary-50 hover:text-primary-600'}`;
+          btn.addEventListener('click', () => {
+            currentPage = i;
+            render();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          });
+          paginationContainer.appendChild(btn);
+        }
+      }
+    }
+
+    if (searchInput) {
+      searchInput.addEventListener('input', (e) => {
+        currentSearch = e.target.value.toLowerCase().trim();
+        currentPage = 1;
+        render();
+      });
+    }
+
+    // Init
+    render();
+  });
+</script>

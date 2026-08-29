@@ -7,7 +7,7 @@ import ProsConsList from '../../components/ProsConsList.astro';
 import CompareTable from '../../components/CompareTable.astro';
 import CTAButton from '../../components/CTAButton.astro';
 import FAQAccordion from '../../components/FAQAccordion.astro';
-import SpeedTestGallery from '../../components/SpeedTestGallery.astro';
+import SpeedTestChart from '../../components/SpeedTestChart.astro';
 
 // Dummy data for components
 const dummyPlans: any[] = [
@@ -83,8 +83,8 @@ const dummyTests = [
     </section>
     
     <section class="mb-12">
-      <h2 class="text-2xl font-semibold mb-4 text-[var(--text-color)]">8. SpeedTestGallery (测速画廊)</h2>
-      <SpeedTestGallery brandName="云速示例" tests={dummyTests} />
+      <h2 class="text-2xl font-semibold mb-4 text-[var(--text-color)]">8. SpeedTestChart (测速图表)</h2>
+      <SpeedTestChart data={dummyTests} />
     </section>
     
   </div>

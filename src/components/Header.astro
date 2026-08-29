@@ -17,7 +17,7 @@ const navItems = [
           <div class="w-8 h-8 flex-shrink-0 group-hover:opacity-90 transition-opacity shadow-sm rounded-lg overflow-hidden">
             <svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" class="w-full h-full">
               <rect width="40" height="40" rx="10" fill="#e8734a"/>
-              <path d="M12 12h12v12H12z" fill="#fff" opacity="0.3"/>
+              <path d="M9 21L31 9L21 31L18 22L9 21Z" fill="#fff"/>
               <circle cx="30" cy="30" r="7" fill="#fff" stroke="#e8734a" stroke-width="1.5"/>
               <path d="M27 30l2 2 4-4" stroke="#e8734a" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
@@ -47,10 +47,21 @@ const navItems = [
       </button>
       
       <!-- Mobile menu button -->
-      <button class="md:hidden text-[var(--text-color)]/80 p-2">
+      <button id="mobile-menu-btn" class="md:hidden text-[var(--text-color)]/80 p-2" aria-label="Toggle Menu">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
       </button>
     </div>
+  </div>
+
+  <!-- Mobile menu -->
+  <div id="mobile-menu" class="hidden md:hidden bg-[var(--bg-color)] border-t border-[var(--border-color)]">
+    <nav class="container mx-auto px-4 py-4 flex flex-col gap-4">
+      {navItems.map(item => (
+        <a href={item.href} class="block text-sm font-medium text-[var(--text-color)]/80 hover:text-primary-500 transition-colors">
+          {item.label}
+        </a>
+      ))}
+    </nav>
   </div>
 </header>
 
@@ -58,12 +69,12 @@ const navItems = [
   // Theme toggle logic
   const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
   const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
-
-  if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+  
+  if (localStorage.getItem('color-theme') === 'light') {
+      themeToggleDarkIcon?.classList.remove('hidden');
+  } else {
       themeToggleLightIcon?.classList.remove('hidden');
       document.documentElement.classList.add('dark');
-  } else {
-      themeToggleDarkIcon?.classList.remove('hidden');
   }
 
   const themeToggleBtn = document.getElementById('theme-toggle');
@@ -89,5 +100,13 @@ const navItems = [
               localStorage.setItem('color-theme', 'dark');
           }
       }
+  });
+
+  // Mobile menu toggle logic
+  const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+  const mobileMenu = document.getElementById('mobile-menu');
+
+  mobileMenuBtn?.addEventListener('click', () => {
+    mobileMenu?.classList.toggle('hidden');
   });
 </script>

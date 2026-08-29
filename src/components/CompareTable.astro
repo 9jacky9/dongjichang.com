@@ -5,7 +5,6 @@ interface Brand {
   price: string;
   protocol: string;
   link: string;
-  regions: string[];
   tags: string[];
 }
 
@@ -14,17 +13,6 @@ interface Props {
 }
 
 const { brands } = Astro.props;
-
-const getFlag = (region: string) => {
-  if (region.includes('香港')) return '🇭🇰';
-  if (region.includes('台湾')) return '🇹🇼';
-  if (region.includes('日本')) return '🇯🇵';
-  if (region.includes('新加坡') || region.includes('狮城')) return '🇸🇬';
-  if (region.includes('美国')) return '🇺🇸';
-  if (region.includes('韩国')) return '🇰🇷';
-  if (region.includes('英国')) return '🇬🇧';
-  return '🌐';
-};
 
 const getTagColor = (tag: string) => {
   if (tag.includes('游戏')) return 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300';
@@ -42,7 +30,6 @@ const getTagColor = (tag: string) => {
         <th class="py-4 px-4">品牌</th>
         <th class="py-4 px-4 w-40">综合评分</th>
         <th class="py-4 px-4">适用场景</th>
-        <th class="py-4 px-4">节点覆盖</th>
         <th class="py-4 px-4">起步价格</th>
         <th class="py-4 px-4">主流协议</th>
         <th class="py-4 px-4 text-right">操作</th>
@@ -52,11 +39,6 @@ const getTagColor = (tag: string) => {
       {brands.map(brand => {
         // Calculate progress bar width (max 5.0)
         const percent = Math.min(100, Math.max(0, (brand.score / 5) * 100));
-        
-        // Deduplicate and limit regions for display
-        const uniqueRegions = [...new Set(brand.regions)];
-        const displayRegions = uniqueRegions.slice(0, 4);
-        const extraRegionsCount = uniqueRegions.length > 4 ? uniqueRegions.length - 4 : 0;
 
         return (
           <tr class="hover:bg-[var(--bg-color)]/30 transition-colors group">
@@ -85,19 +67,6 @@ const getTagColor = (tag: string) => {
                   </span>
                 ))}
                 {brand.tags.length === 0 && <span class="text-xs text-[var(--text-color)]/40">-</span>}
-              </div>
-            </td>
-            <td class="py-4 px-4">
-              <div class="flex items-center gap-1">
-                {displayRegions.map(region => (
-                  <span class="text-xl leading-none" title={region}>{getFlag(region)}</span>
-                ))}
-                {extraRegionsCount > 0 && (
-                  <span class="text-[10px] font-bold bg-[var(--bg-color)] text-[var(--text-color)]/70 px-1.5 py-0.5 rounded-md ml-1">
-                    +{extraRegionsCount}
-                  </span>
-                )}
-                {uniqueRegions.length === 0 && <span class="text-sm text-[var(--text-color)]/40">未公开</span>}
               </div>
             </td>
             <td class="py-4 px-4">

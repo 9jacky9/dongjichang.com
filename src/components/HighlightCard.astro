@@ -1,0 +1,12 @@
+---
+const { title = '重点摘录' } = Astro.props;
+---
+<div class="my-8 bg-[var(--card-bg)] border-l-4 border-primary-500 rounded-r-xl p-6 shadow-sm not-prose">
+  <div class="font-bold text-primary-600 dark:text-primary-400 mb-2 flex items-center gap-2">
+    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+    {title}
+  </div>
+  <div class="m-0 text-[var(--text-color)]/90 leading-relaxed text-[1.05rem]">
+    <slot />
+  </div>
+</div>
