@@ -16,6 +16,12 @@ export async function getStaticPaths() {
 const { post, allPosts } = Astro.props;
 const { Content, headings } = await render(post);
 
+const allReviews = await getCollection('reviews');
+const getBrandName = (slug: string) => {
+  const review = allReviews.find(r => r.id === slug);
+  return review ? review.data.name : slug;
+};
+
 // TOC filtering (only h2 and h3)
 const toc = headings.filter(h => h.depth === 2 || h.depth === 3);
 
@@ -143,7 +149,7 @@ const relatedPosts = allPosts
                <div class="flex flex-wrap gap-4">
                   {post.data.relatedBrands.map(brand => (
                      <a href={`/reviews/${brand}`} class="bg-[var(--card-bg)] border border-[var(--border-color)] hover:border-primary-500 px-5 py-3 rounded-xl text-[var(--text-color)] font-medium transition-colors shadow-sm flex items-center gap-2">
-                       前往 {brand} 详细评测 <svg class="w-4 h-4 text-primary-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                       前往 {getBrandName(brand)} 详细评测 <svg class="w-4 h-4 text-primary-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
                      </a>
                   ))}
                </div>
