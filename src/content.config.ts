@@ -30,6 +30,8 @@ const reviewsCollection = defineCollection({
       'stable', 'budget', 'heavy-traffic', 'ai-power', 'streaming-hq', 'beginner', 'balanced'
     ])).default([]),
 
+    rankTier: z.number().int().min(1).max(6), // 1-6，数字越小排名越靠前，同一tier内随机排序
+
     featuredNote: z.string().optional(),
 
     // 套餐信息 (optional for now, as images/details are pending)

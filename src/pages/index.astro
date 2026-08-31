@@ -15,7 +15,7 @@ const getBrandLogo = (id: string) => {
 };
 
 // Sort by rating or just take the first 4 for the 'Top 4' list
-const topReviews = allReviews.sort((a, b) => b.data.rating.overall - a.data.rating.overall).slice(0, 4);
+const topReviews = allReviews.sort((a, b) => (a.data.rankTier || 99) - (b.data.rankTier || 99)).slice(0, 12);
 const featuredReviews = allReviews.filter(r => r.data.featured).sort((a, b) => b.data.rating.overall - a.data.rating.overall).slice(0, 4);
 
 // Format for CompareTable
@@ -155,20 +155,20 @@ const getFeatureIcon = (pro: string) => {
     <!-- Top Reviews Cards -->
     <section id="top-reviews" class="mb-20">
       <div class="flex items-center justify-between mb-8">
-        <h2 class="text-3xl font-bold text-[var(--text-color)]">精选品牌评测</h2>
+        <h2 class="text-3xl font-bold text-[var(--text-color)]">精选推荐</h2>
         <a href="/brands" class="text-primary-600 dark:text-primary-400 font-medium hover:underline flex items-center gap-1">
           查看全部 <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
         </a>
       </div>
       
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div id="brands-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {topReviews.map(review => {
           const regions = (review.data.speedTests || []).map(st => st.region);
           const uniqueRegions = [...new Set(regions)].slice(0, 5);
           const topPros = (review.data.pros || []).slice(0, 3);
           
           return (
-          <a href={`/reviews/${review.id}`} class="group flex flex-col bg-[var(--card-bg)] border border-[var(--border-color)] rounded-2xl overflow-hidden hover:border-primary-500 hover:shadow-[0_0_20px_rgba(232,115,74,0.15)] transition-all">
+          <a data-tier={review.data.rankTier || 99} href={`/reviews/${review.id}`} class="brand-card group flex flex-col bg-[var(--card-bg)] border border-[var(--border-color)] rounded-2xl overflow-hidden hover:border-primary-500 hover:shadow-[0_0_20px_rgba(232,115,74,0.15)] transition-all">
             <div class="p-6 flex-grow">
               <div class="flex justify-between items-start mb-4">
                 <div class="w-12 h-12 rounded-xl overflow-hidden bg-[var(--bg-color)] border border-[var(--border-color)] p-1.5 shadow-sm flex items-center justify-center">
@@ -215,7 +215,39 @@ const getFeatureIcon = (pro: string) => {
           </a>
         )})}
       </div>
+
     </section>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const grid = document.getElementById('brands-grid');
+        if (!grid) return;
+        const items = Array.from(grid.querySelectorAll('.brand-card'));
+        
+        // Group items by tier
+        const tiers = {};
+        items.forEach(item => {
+          const tier = item.getAttribute('data-tier') || '99';
+          if (!tiers[tier]) tiers[tier] = [];
+          tiers[tier].push(item);
+        });
+        
+        // Shuffle each tier (Fisher-Yates)
+        const shuffle = (array) => {
+          for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+          }
+        };
+        
+        // Append back to grid in order of tiers
+        grid.innerHTML = '';
+        Object.keys(tiers).sort((a, b) => Number(a) - Number(b)).forEach(tier => {
+          shuffle(tiers[tier]);
+          tiers[tier].forEach(item => grid.appendChild(item));
+        });
+      });
+    </script>
 
     <!-- Scenes Entry -->
     <section class="mb-20">

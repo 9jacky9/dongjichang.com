@@ -5,7 +5,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import RatingBadge from '../../components/RatingBadge.astro';
 
 const allReviews = await getCollection('reviews');
-const sortedReviews = allReviews.sort((a, b) => b.data.rating.overall - a.data.rating.overall);
+const sortedReviews = allReviews.sort((a, b) => (a.data.rankTier || 99) - (b.data.rankTier || 99));
 
 const brandLogos = import.meta.glob<{ default: ImageMetadata }>('../../assets/brands/*.{svg,png,jpg}', { eager: true });
 const getBrandLogo = (id: string) => {
@@ -27,9 +27,9 @@ const getBrandLogo = (id: string) => {
   </div>
 
   <div class="container mx-auto px-4 py-16 max-w-6xl">
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+    <div id="all-brands-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
       {sortedReviews.map(review => (
-        <a href={`/reviews/${review.id}`} class="group flex flex-col bg-[var(--card-bg)] border border-[var(--border-color)] rounded-2xl overflow-hidden hover:border-primary-500 hover:shadow-xl hover:shadow-primary-500/5 transition-all">
+        <a data-tier={review.data.rankTier || 99} href={`/reviews/${review.id}`} class="brand-card group flex flex-col bg-[var(--card-bg)] border border-[var(--border-color)] rounded-2xl overflow-hidden hover:border-primary-500 hover:shadow-xl hover:shadow-primary-500/5 transition-all">
           <div class="p-6">
             <div class="flex justify-between items-start mb-6">
               <div class="flex items-center gap-4">
@@ -71,5 +71,35 @@ const getBrandLogo = (id: string) => {
         </a>
       ))}
     </div>
+
   </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const grid = document.getElementById('all-brands-grid');
+      if (!grid) return;
+      const items = Array.from(grid.querySelectorAll('.brand-card'));
+      
+      const tiers = {};
+      items.forEach(item => {
+        const tier = item.getAttribute('data-tier') || '99';
+        if (!tiers[tier]) tiers[tier] = [];
+        tiers[tier].push(item);
+      });
+      
+      const shuffle = (array) => {
+        for (let i = array.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [array[i], array[j]] = [array[j], array[i]];
+        }
+      };
+      
+      grid.innerHTML = '';
+      Object.keys(tiers).sort((a, b) => Number(a) - Number(b)).forEach(tier => {
+        shuffle(tiers[tier]);
+        tiers[tier].forEach(item => grid.appendChild(item));
+      });
+    });
+  </script>
 </BaseLayout>
+
